@@ -46,7 +46,7 @@
             <span>LinkedIn</span>
           </a>
           <a
-              href="https://github.com/onlyKosmo"
+              href="https://github.com/basileferi"
               target="_blank"
               rel="noopener noreferrer"
               class="social-link"

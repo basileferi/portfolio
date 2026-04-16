@@ -43,7 +43,7 @@ export default [
         media: [PlayTestPreview, PlayTestPreview2],
         description: "<p>Élaboration d'un site avec sa base de données permettant à ses utilisateurs de se connecter, de noter des jeux sur 5, de laisser des commentaires et d'interagir en communauté de joueurs. Calcul de la note moyenne des jeux en temps réel selon celles des utilisateurs. Consultation de nombreux jeux, architecture complète de cette plateforme web avec base de données MariaDB, soumission et consultation de nombreuses notes utilisateurs</p>",
         tech_stack: "PHP, MariaDB, HTML & CSS, JavaScript",
-        link: "https://github.com/onlyKosmo/playtest",
+        link: "https://github.com/basileferi/playtest",
     },
     {
         title: "SuitLimbo",

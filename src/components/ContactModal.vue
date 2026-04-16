@@ -59,7 +59,7 @@
           </a>
 
           <!-- GitHub -->
-          <a href="https://github.com/onlyKosmo"
+          <a href="https://github.com/basileferi"
              target="_blank"
              rel="noopener noreferrer"
              class="flex items-center gap-1.5 text-white hover:text-gray-300 transition-colors"
