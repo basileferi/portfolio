@@ -1,38 +1,45 @@
-# portfolio
+# "Kosmo." Portfolio — onlyKosmo
 
-This template should help get you started developing with Vue 3 in Vite.
+**Mon portfolio m’introduisant à Three.js et Vue 3 | Vite.js | Node.js**  
+Ce projet est un site web portfolio interactif développé pour expérimenter et apprendre à utiliser **Three.js**, **GSAP**, **Vue 3**, **Vite.js** et une configuration Node.js avec Tailwind CSS.
 
-## Recommended IDE Setup
+## 📌 Description
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+Ce dépôt contient mon portfolio personnel. Le but principal est d’explorer la création d’éléments 3D interactifs avec **Three.js**, d’intégrer des animations avancées avec **GSAP**, et d’utiliser **Vue 3** comme framework front-end pour orchestrer l’interface. Le projet est construit avec **Vite** pour un développement rapide et des temps de construction réduits. :contentReference[oaicite:2]{index=2}
 
-## Recommended Browser Setup
+Ce portfolio sert :
+- à présenter mes projets et compétences techniques,
+- à expérimenter des animations 3D et des interactions web modernes,
+- comme base pour d’autres projets Vue 3 + Three.js.
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd) 
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+---
 
-## Customize configuration
+## 🚀 Fonctionnalités principales
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+- Animation 3D interactive avec **Three.js**  
+- Transitions et animations de textes avec **GSAP**  
+- Architecture front-end moderne avec **Vue 3**  
+- Build optimisé avec **Vite**  
+- Structure de projet modulaire et facile à personnaliser  
+- Configuration Node.js standard
 
-## Project Setup
+---
 
-```sh
-npm install
-```
+## 🧱 Stack
 
-### Compile and Hot-Reload for Development
+Le projet utilise :
 
-```sh
-npm run dev
-```
+- **Vue 3** – Framework JavaScript frontend  
+- **Three.js** – Librairie 3D WebGL  
+- **GSAP** – Librairie d’animations JavaScript  
+- **Vite** – Outil de build ultra-rapide  
+- **Node.js** – Gestionnaire de projet & outils de développement  
+- **Tailwind CSS** – Styles utilitaires (utilisé très peu)  
+- **npm** – Gestionnaire de paquets
 
-### Compile and Minify for Production
+---
 
-```sh
-npm run build
-```
+© 2025 Basile Ferrand-Richarte. All rights reserved.
+
+
+
