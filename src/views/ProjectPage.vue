@@ -6,7 +6,7 @@
     </header>
   </div>
   <div class="project-page">
-    <Header :show="true" :show-logo="true"/>
+    <Header :show-logo="true"/>
     <button class="back" @click="goBack">← Retour</button>
 
 

@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#131413"/>
+
+  <!-- Grid pattern -->
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#897eff" stroke-width="0.3" opacity="0.25"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+
+  <!-- Accent border -->
+  <rect x="2" y="2" width="1196" height="626" rx="10" fill="none" stroke="#897eff" stroke-width="1.5" opacity="0.6"/>
+
+  <!-- Circuit decorations -->
+  <line x1="200" y1="0" x2="200" y2="630" stroke="#897eff" stroke-width="0.5" opacity="0.15"/>
+  <line x1="1000" y1="0" x2="1000" y2="630" stroke="#897eff" stroke-width="0.5" opacity="0.15"/>
+  <line x1="0" y1="200" x2="1200" y2="200" stroke="#897eff" stroke-width="0.5" opacity="0.15"/>
+  <line x1="0" y1="430" x2="1200" y2="430" stroke="#897eff" stroke-width="0.5" opacity="0.15"/>
+
+  <!-- Node dots -->
+  <circle cx="200" cy="200" r="4" fill="#897eff" opacity="0.5"/>
+  <circle cx="1000" cy="200" r="4" fill="#897eff" opacity="0.5"/>
+  <circle cx="200" cy="430" r="4" fill="#897eff" opacity="0.5"/>
+  <circle cx="1000" cy="430" r="4" fill="#897eff" opacity="0.5"/>
+  <circle cx="600" cy="315" r="60" fill="none" stroke="#897eff" stroke-width="1" opacity="0.2"/>
+  <circle cx="600" cy="315" r="30" fill="none" stroke="#897eff" stroke-width="1" opacity="0.3"/>
+  <circle cx="600" cy="315" r="6" fill="#897eff" opacity="0.6"/>
+
+  <!-- Main label -->
+  <text x="600" y="265" text-anchor="middle" font-family="'Courier New', monospace" font-size="90" font-weight="700" fill="#897eff" letter-spacing="8">ESOP</text>
+  <text x="600" y="380" text-anchor="middle" font-family="'Courier New', monospace" font-size="22" fill="#7f7f7f" letter-spacing="4">G2eLab — Grenoble INP</text>
+  <text x="600" y="420" text-anchor="middle" font-family="'Courier New', monospace" font-size="16" fill="#897eff" opacity="0.7" letter-spacing="2">Vue 3 · FastAPI · Smart Grid Research</text>
+
+  <!-- Corner labels -->
+  <text x="24" y="24" font-family="monospace" font-size="11" fill="#897eff" opacity="0.4">STAGE 2025</text>
+  <text x="1176" y="24" text-anchor="end" font-family="monospace" font-size="11" fill="#897eff" opacity="0.4">G2ELAB</text>
+  <text x="24" y="618" font-family="monospace" font-size="11" fill="#7f7f7f" opacity="0.4">Ajouter /public/projects/esop-g2elab/preview.jpg</text>
+</svg>
