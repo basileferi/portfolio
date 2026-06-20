@@ -28,3 +28,9 @@ coverage
 *.sw?
 
 *.tsbuildinfo
+/.codegraph/.gitignore
+/.serena/.gitignore
+/CLAUDE.md
+/.serena/project.yml
+/.codegraph/daemon.pid
+/.claude/settings.json
