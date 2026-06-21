@@ -86,7 +86,7 @@
       <section class="kosmo-section">
         <h2 class="kosmo-title scramble-text">K___?</h2>
         <p class="kosmo-explanation split-text">
-          Qu'est ce que Kosmo ? Il s'agit d'un pseudonyme que j'utilise parfois sur internet. J'ai choisi de le nommer ainsi car Kosmo est une partie de moi sur le Web, comme ce portfolio. Ce projet est mon tout premier site utilisant les bibliothèques GSAP et Three.js, j'ai adoré apprendre les bases de ces bibliothèques JavaScript tout au long de son développement.
+          Qu'est ce que Kosmo ? Il s'agit d'un pseudonyme que j'utilise parfois sur internet. J'ai choisi de le nommer ainsi car Kosmo est une partie mon identité sur le Web, tout comme ce portfolio. Ce projet est mon tout premier site utilisant les bibliothèques GSAP et Three.js, j'ai adoré apprendre les bases de ces bibliothèques JavaScript tout au long de son développement.
         </p>
         <p class="kosmo-accent">→ Mon portfolio de futur développeur web</p>
       </section>
@@ -96,7 +96,7 @@
         <h3 class="cta-title split-text">Prêt à discuter ?</h3>
         <p class="cta-subtitle"><button @click="modal.openContact()" class="cta-contact-btn"><strong>Contactez-moi </strong></button> ou explorez mon portfolio complet pour découvrir mes derniers projets</p>
         <animated-button @click="modal.openContact()" >
-          Me Contacter
+          ME CONTACTER
         </animated-button>
         <RouterLink to="/" class="retour-proj">
           <div class="retour-row">
@@ -213,73 +213,128 @@ const skillsData = [
 
 // Animations GSAP au montage du composant
 onMounted(async () => {
-  // Attendre que les polices soient chargées
   await document.fonts.ready
 
-  const scroller = ".about-page"
+  const scroller = '.about-page'
 
-  // --- SplitText pour tous les éléments .split-text ---
-  const splitEls = document.querySelectorAll('.split-text')
-  splitEls.forEach(el => {
-    const split = new SplitText(el, { type: "lines, words, chars" })
+  // ---- Hero: fires immediately on mount ----
 
-    // Générer une direction aléatoire pour ce bloc
-    const xStart = gsap.utils.random(-50, 50)
-    const yStart = gsap.utils.random(-30, 30)
+  const heroTitleSplit = new SplitText('.hero-title', { type: 'words' })
+  gsap.from(heroTitleSplit.words, {
+    y: 70,
+    opacity: 0,
+    rotateX: -60,
+    transformPerspective: 1000,
+    duration: 1,
+    ease: 'back.out(1.5)',
+    stagger: { amount: 0.45 },
+    delay: 0.1,
+    onComplete() { heroTitleSplit.revert() },
+  })
 
-    gsap.from(split.chars, {
-      opacity: 0,
-      x: xStart,
-      y: yStart,
-      stagger: 0.007,
-      duration: 0.3,
-      ease: "power2.out",
-      scrollTrigger: {
-        trigger: el,
-        start: "top 90%",
-        scroller: ".about-page"
-      }
+  const heroSubSplit = new SplitText('.hero-subtitle', { type: 'lines' })
+  gsap.from(heroSubSplit.lines, {
+    y: 30,
+    opacity: 0,
+    duration: 0.75,
+    ease: 'power3.out',
+    stagger: 0.12,
+    delay: 0.55,
+    onComplete() { heroSubSplit.revert() },
+  })
+
+  gsap.from(['.hero-text .btn-animated', '.hero-visual'], {
+    y: 20,
+    opacity: 0,
+    duration: 0.8,
+    ease: 'power2.out',
+    stagger: 0.15,
+    delay: 0.9,
+    clearProps: 'all',
+  })
+
+  // ---- Dynamic rows: columns slide from opposite sides ----
+  document.querySelectorAll('.dynamic-row').forEach((row, i) => {
+    const xDir    = i % 2 === 0 ? -50 : 50
+    const leftCol  = row.querySelector('.left-column')
+    const rightCol = row.querySelector('.right-column')
+    const badge    = row.querySelector('.badge-number')
+
+    const st = { trigger: row, start: 'top 86%', scroller }
+
+    if (leftCol) gsap.from(leftCol, {
+      x: xDir, opacity: 0, duration: 0.85, ease: 'power3.out',
+      clearProps: 'all', scrollTrigger: st,
+    })
+    if (rightCol) gsap.from(rightCol, {
+      x: -xDir, opacity: 0, duration: 0.85, ease: 'power3.out', delay: 0.1,
+      clearProps: 'all', scrollTrigger: st,
+    })
+    if (badge) gsap.fromTo(badge,
+      { opacity: 0, scale: 0.3, rotation: -25 },
+      { opacity: 0.15, scale: 1, rotation: 0, duration: 1, ease: 'back.out(2.2)',
+        clearProps: 'transform', scrollTrigger: st }
+    )
+  })
+
+  // Perpetual float on section graphics
+  document.querySelectorAll('.section-graphic').forEach((el, i) => {
+    gsap.to(el, {
+      y: -12, duration: 2.5 + i * 0.3, ease: 'sine.inOut',
+      repeat: -1, yoyo: true, delay: i * 0.55,
     })
   })
 
+  // ---- Skills section ----
+  const skillsTitleSplit = new SplitText('.section-title-center', { type: 'chars' })
+  gsap.from(skillsTitleSplit.chars, {
+    opacity: 0, y: 40, scale: 0.6,
+    duration: 0.6, ease: 'back.out(2)', stagger: { amount: 0.5 },
+    scrollTrigger: { trigger: '.section-title-center', start: 'top 86%', scroller },
+    onComplete() { skillsTitleSplit.revert() },
+  })
 
-  // --- ScrambleText pour "Kosmo ?" ---
+  gsap.from('.skill-card', {
+    y: 55, opacity: 0, scale: 0.88,
+    duration: 0.7, ease: 'back.out(1.8)',
+    stagger: { each: 0.07, from: 'start' },
+    scrollTrigger: { trigger: '.skills-grid', start: 'top 82%', scroller },
+    clearProps: 'all',
+  })
+
+  // ---- Other .split-text blocks (skip already-handled hero elements) ----
+  const skipSet = new Set([
+    ...Array.from(document.querySelectorAll('.hero-title, .hero-subtitle, .section-title-center'))
+  ])
+
+  document.querySelectorAll('.split-text').forEach(el => {
+    if (skipSet.has(el)) return
+    const split = new SplitText(el, { type: 'words' })
+    gsap.from(split.words, {
+      opacity: 0, y: 22,
+      duration: 0.55, ease: 'power2.out', stagger: { amount: 0.3 },
+      scrollTrigger: { trigger: el, start: 'top 90%', scroller },
+      onComplete() { split.revert() },
+    })
+  })
+
+  // ---- Kosmo scramble ----
   const kosmo = document.querySelector('.scramble-text')
   if (kosmo) {
-
-    kosmo.textContent = "K____ ?"
-
+    kosmo.textContent = 'K____ ?'
     gsap.to(kosmo, {
-      duration: 2,
-      scrambleText: "Kosmo ?",
-      ease: "power2.inOut",
-      scrollTrigger: {
-        trigger: kosmo,
-        start: "top 90%",
-        scroller: ".about-page"
-      }
+      duration: 2.2, scrambleText: 'Kosmo ?', ease: 'power2.inOut',
+      scrollTrigger: { trigger: kosmo, start: 'top 88%', scroller },
     })
   }
 
-
-
-  // --- Animation des sections dynamiques ---
-  const dynamicRows = document.querySelectorAll('.dynamic-row')
-  dynamicRows.forEach((row, i) => {
-    gsap.from(row, {
-      opacity: 0,
-      y: 40,
-      duration: 0.3,
-      delay: i * 0.05,
-      scrollTrigger: {
-        trigger: row,
-        start: "top 85%",
-        scroller
-      }
-    })
+  // ---- CTA final ----
+  gsap.from('.cta-final', {
+    y: 35, opacity: 0, duration: 0.85, ease: 'power3.out',
+    scrollTrigger: { trigger: '.cta-final', start: 'top 88%', scroller },
+    clearProps: 'all',
   })
 
-  // --- Refresh de ScrollTrigger après toutes les animations ---
   ScrollTrigger.refresh()
 })
 
@@ -447,7 +502,7 @@ onMounted(async () => {
   max-width: 280px;
   aspect-ratio: 1;
   border-radius: 1rem;
-  border: 2px solid var(--color-accent);
+  border: 2px solid rgba(137, 126, 255, 0.4);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -455,10 +510,23 @@ onMounted(async () => {
   gap: 1rem;
   background: rgba(139, 92, 246, 0.05);
   backdrop-filter: blur(10px);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.section-graphic:hover {
+  border-color: rgba(137, 126, 255, 0.85);
+  box-shadow: 0 0 35px rgba(137, 126, 255, 0.18),
+              inset 0 0 20px rgba(137, 126, 255, 0.06);
 }
 
 .graphic-emoji {
   font-size: 3.5rem;
+  display: inline-block;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.section-graphic:hover .graphic-emoji {
+  transform: scale(1.25) rotate(6deg);
 }
 
 .graphic-label {
@@ -491,18 +559,44 @@ onMounted(async () => {
 
 .skill-card {
   padding: 2rem;
-  border: 1px solid var(--color-accent);
+  border: 1px solid rgba(137, 126, 255, 0.35);
   border-radius: 0.75rem;
-  background: rgba(139, 92, 246, 0.08);
+  background: rgba(139, 92, 246, 0.06);
   text-align: center;
-  transition: all 0.3s ease;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.35s ease,
+              background 0.3s ease,
+              border-color 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.skill-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    transparent 25%,
+    rgba(137, 126, 255, 0.14) 50%,
+    transparent 75%
+  );
+  transform: translateX(-150%);
+  pointer-events: none;
+  transition: none;
 }
 
 .skill-card:hover {
-  border-color: var(--color-accent);
-  background: rgba(139, 92, 246, 0.15);
-  transform: translateY(-4px);
-  box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
+  border-color: rgba(137, 126, 255, 0.8);
+  background: rgba(139, 92, 246, 0.14);
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 20px 50px rgba(137, 126, 255, 0.22),
+              0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.skill-card:hover::before {
+  transform: translateX(150%);
+  transition: transform 0.65s ease;
 }
 
 .skill-icon {
@@ -664,5 +758,69 @@ onMounted(async () => {
 
 .cta-contact-btn:hover {
   color: var(--color-text);
+}
+
+/* ---- Hero graphic: soft rotating glow ---- */
+.hero-graphic {
+  position: relative;
+}
+
+.hero-graphic::after {
+  content: '';
+  position: absolute;
+  inset: -18px;
+  border-radius: calc(1rem + 18px);
+  background: conic-gradient(
+    from var(--border-angle, 0deg),
+    transparent 0deg,
+    var(--color-accent) 45deg,
+    transparent 90deg
+  );
+  z-index: -1;
+  animation: rotateBorder 4s linear infinite;
+  filter: blur(16px);
+  opacity: 0.7;
+}
+
+@keyframes rotateBorder {
+  to { --border-angle: 360deg; }
+}
+
+@property --border-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+/* ---- Badge number: gradient tint ---- */
+.badge-number {
+  background: linear-gradient(135deg, var(--color-accent) 0%, rgba(137, 126, 255, 0) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  opacity: 0.15;
+}
+
+/* ---- Dynamic row: accent left border on hover ---- */
+.dynamic-row {
+  border-left: 2px solid transparent;
+  padding-left: 0.5rem;
+  transition: border-color 0.4s ease;
+}
+
+.dynamic-row:hover {
+  border-color: rgba(137, 126, 255, 0.4);
+}
+
+/* ---- Custom scrollbar ---- */
+.about-page::-webkit-scrollbar { width: 4px; }
+.about-page::-webkit-scrollbar-track { background: transparent; }
+.about-page::-webkit-scrollbar-thumb { background: rgba(137, 126, 255, 0.3); border-radius: 2px; }
+.about-page::-webkit-scrollbar-thumb:hover { background: rgba(137, 126, 255, 0.6); }
+
+/* ---- Reduced motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  .hero-graphic::after { animation: none; }
+  .skill-card, .section-graphic, .graphic-emoji { transition: opacity 0.2s ease; }
 }
 </style>

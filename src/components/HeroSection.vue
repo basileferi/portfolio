@@ -190,12 +190,10 @@ onMounted(() => {
       duration: 0.8,
       ease: 'power3.out',
     }, '-=0.5')
-    .from('.cta', {
-      y: 20,
-      opacity: 0,
-      duration: 0.6,
-      ease: 'power2.out',
-    }, '-=0.4');
+    .fromTo('.cta',
+      { opacity: 0 },
+      { opacity: 1, duration: 0.8, ease: 'power2.out', clearProps: 'all' },
+    '-=0.4');
 
     // Bottom corners slide in from opposite sides
     const splitBL = new SplitText('.bottom-left', { type: 'chars' });

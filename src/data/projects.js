@@ -60,7 +60,7 @@ export default [
 
     // NEW PROJECT — add yours following this pattern ↓
     defineProject({
-        title: "ESOP — G2eLab",
+        title: "ESOP - G2eLab",
         slug: "esop-g2elab",
         subtitle: "Application métier pour la recherche scientifique",
         preview: "/projects/esop-g2elab/preview.svg",
@@ -73,12 +73,12 @@ export default [
 
 <h3>Architecture</h3>
 <ul>
-  <li><strong>Backend — FastAPI (Python) :</strong> API RESTful haute performance avec documentation Swagger automatique. Interfacée avec la bibliothèque de calcul interne, les résultats complexes sont traduits en structures JSON exploitables.</li>
-  <li><strong>Frontend — Vue 3 (SPA) :</strong> Interface responsive permettant la visualisation dynamique des simulations sous deux formes — graphique (courbes de charge) et scalaire (métriques de performance).</li>
+  <li><strong>Backend - FastAPI (Python) :</strong> API RESTful haute performance avec documentation Swagger automatique. Interfacée avec la bibliothèque de calcul interne, les résultats complexes sont traduits en structures JSON exploitables.</li>
+  <li><strong>Frontend - Vue 3 (SPA) :</strong> Interface responsive permettant la visualisation dynamique des simulations sous deux formes — graphique (courbes de charge) et scalaire (métriques de performance).</li>
 </ul>
 
 <h3>Apports</h3>
-<p>Ce stage a confirmé ma voie vers l'ingénierie logicielle appliquée à la science : manipuler des données critiques, collaborer avec un expert du domaine, et livrer un outil robuste de A à Z en autonomie.</p>`,
+<p>Ce stage a confirmé mon envie de continuer vers la création de logicielle appliquée à la science : manipuler des données, collaborer avec un expert du domaine, et livrer un outil robuste de A à Z en autonomie.</p>`,
         tech_stack: "Vue 3, FastAPI (Python), RESTful API, Swagger / OpenAPI",
         link: "https://esop.g2elab.grenoble-inp.fr/",
     }),

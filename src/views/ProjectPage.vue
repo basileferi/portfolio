@@ -66,11 +66,11 @@
       <!-- CTA Final -->
       <section class="cta-final">
         <h3 class="cta-title split-text">Prêt à discuter ?</h3>
-        <p class="cta-subtitle"><button @click="modal.openContact()" class="cta-contact-btn"><strong>Contactez-moi </strong></button>
+        <p class="cta-subtitle"><button @click="modal.openContact()" class="cta-contact-btn"><strong>ME CONTACTER </strong></button>
           ou apprenez en davantage</p>
         <RouterLink to="/about">
           <animated-button>
-            À propos de moi
+            À PROPOS
           </animated-button>
         </RouterLink>
         <RouterLink to="/" class="retour-proj">

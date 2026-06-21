@@ -34,3 +34,10 @@ coverage
 /.serena/project.yml
 /.codegraph/daemon.pid
 /.claude/settings.json
+/ADDING-PROJECTS.md
+
+# Local / IDE artifacts
+.claude-images/
+*.iml
+qodana.yaml
+project-structure.txt

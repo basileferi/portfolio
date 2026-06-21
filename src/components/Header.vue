@@ -43,7 +43,7 @@
     </nav>
 
     <!-- modal -->
-    <transition name="fade">
+    <transition :css="false" @enter="onModalEnter" @leave="onModalLeave">
       <div v-if="modal.isContactOpen" class="modal-overlay" @click.self="modal.closeContact()">
         <ContactModal @close="modal.closeContact()" />
       </div>
@@ -57,6 +57,7 @@ import ContactModal from './ContactModal.vue'
 import { useRouter } from 'vue-router'
 import AnimatedButton from "@/components/AnimatedButton.vue";
 import { useModalStore } from '@/stores/useModalStore'
+import { gsap } from 'gsap'
 
 const modal = useModalStore()
 
@@ -93,6 +94,27 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize)
 })
+
+// ---- Modal GSAP transitions ----
+function onModalEnter(el, done) {
+  const panel = el.querySelector('.modal-content')
+  gsap.set(el,    { opacity: 0 })
+  gsap.set(panel, { y: 60, opacity: 0, scale: 0.92, rotateX: 8, transformPerspective: 800 })
+
+  gsap.to(el, { opacity: 1, duration: 0.4, ease: 'power2.out' })
+  gsap.to(panel, {
+    y: 0, opacity: 1, scale: 1, rotateX: 0,
+    duration: 0.6, delay: 0.08,
+    ease: 'back.out(1.5)',
+    onComplete: done,
+  })
+}
+
+function onModalLeave(el, done) {
+  const panel = el.querySelector('.modal-content')
+  gsap.to(panel, { y: -30, opacity: 0, scale: 0.95, duration: 0.28, ease: 'power2.in' })
+  gsap.to(el, { opacity: 0, duration: 0.35, delay: 0.1, ease: 'power2.in', onComplete: done })
+}
 
 // helpers
 function openContact() {
@@ -166,12 +188,30 @@ function onMenuLinkClick() {
 }
 
 .top-right .about {
-    color: var(--color-text);
-  transition: color 0.2s ease;
+  color: var(--color-text);
+  transition: color 0.25s ease;
+  position: relative;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+}
+
+.top-right .about::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 0;
+  height: 1.5px;
+  background: var(--color-accent);
+  transition: width 0.35s cubic-bezier(0.77, 0, 0.175, 1);
 }
 
 .top-right .about:hover {
   color: var(--color-accent);
+}
+
+.top-right .about:hover::after {
+  width: 100%;
 }
 
 
