@@ -1,4 +1,4 @@
-# "Kosmo." Portfolio — onlyKosmo
+# "Kosmo." Portfolio - onlyKosmo
 
 **Mon portfolio m’introduisant à Three.js et Vue 3 | Vite.js | Node.js**  
 Ce projet est un site web portfolio interactif développé pour expérimenter et apprendre à utiliser **Three.js**, **GSAP**, **Vue 3**, **Vite.js** et une configuration Node.js avec Tailwind CSS.

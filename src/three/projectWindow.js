@@ -137,16 +137,20 @@ export default function createProjectWindow(
 
     // ---- PREVIEW IMAGE ----
     const loader = new THREE.TextureLoader();
-    let previewMesh = null;
+    let previewMesh  = null;
+    let loadTicket   = 0; // incremented on every new request; stale callbacks check against it
+
+    function disposeMesh(mesh) {
+        panel.remove(mesh);
+        if (mesh.material.map) mesh.material.map.dispose();
+        mesh.geometry.dispose();
+        mesh.material.dispose();
+    }
 
     function createOrUpdatePreview(texture) {
-        if (previewMesh) {
-            panel.remove(previewMesh);
-            if (previewMesh.material.map) previewMesh.material.map.dispose();
-            previewMesh.geometry.dispose();
-            previewMesh.material.dispose();
-            previewMesh = null;
-        }
+        // Dispose any existing mesh first
+        if (previewMesh) { disposeMesh(previewMesh); previewMesh = null; }
+
         previewMesh = new THREE.Mesh(
             new THREE.PlaneGeometry(width, height),
             new THREE.MeshBasicMaterial({
@@ -166,24 +170,32 @@ export default function createProjectWindow(
     function updatePreview(url) {
         if (!url) return showPlaceholder();
         hidePlaceholder();
-        loader.load(url, createOrUpdatePreview, undefined, () => showPlaceholder());
+        const ticket = ++loadTicket;
+        loader.load(
+            url,
+            (texture) => {
+                if (ticket !== loadTicket) { texture.dispose(); return; } // stale — a newer request won
+                createOrUpdatePreview(texture);
+            },
+            undefined,
+            () => { if (ticket === loadTicket) showPlaceholder(); }
+        );
     }
 
     function clearPreview() {
+        ++loadTicket; // invalidate any in-flight load
+
         if (previewMesh) {
-            gsap.to(previewMesh.material, {
+            const stale = previewMesh;
+            previewMesh = null; // null immediately so a concurrent updatePreview can set its own mesh
+
+            gsap.to(stale.material, {
                 opacity: 0,
-                duration: 0.35,
+                duration: 0.3,
                 ease: 'power2.inOut',
                 onComplete: () => {
-                    if (previewMesh) {
-                        panel.remove(previewMesh);
-                        if (previewMesh.material.map) previewMesh.material.map.dispose();
-                        previewMesh.geometry.dispose();
-                        previewMesh.material.dispose();
-                        previewMesh = null;
-                    }
-                    showPlaceholder();
+                    disposeMesh(stale);
+                    if (!previewMesh) showPlaceholder(); // only show placeholder if no new preview arrived
                 },
             });
         } else {
@@ -224,16 +236,8 @@ export default function createProjectWindow(
 
     function destroy() {
         if (floatTween) floatTween.kill();
-        if (previewMesh) {
-            if (previewMesh.material.map) previewMesh.material.map.dispose();
-            previewMesh.geometry.dispose();
-            previewMesh.material.dispose();
-        }
-        if (placeholderMesh) {
-            if (placeholderMesh.material.map) placeholderMesh.material.map.dispose();
-            placeholderMesh.geometry.dispose();
-            placeholderMesh.material.dispose();
-        }
+        if (previewMesh)     { disposeMesh(previewMesh);     previewMesh = null; }
+        if (placeholderMesh) { disposeMesh(placeholderMesh); placeholderMesh = null; }
         panel.geometry.dispose();
         panelMat.dispose();
         glowMesh.geometry.dispose();

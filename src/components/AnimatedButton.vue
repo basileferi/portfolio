@@ -1,147 +1,91 @@
-<script setup>
-import { ref, onMounted, onUnmounted, nextTick, defineExpose } from "vue";
-import { gsap } from "gsap";
-
-const wrapper = ref(null);
-const svg = ref(null);
-const rect = ref(null);
-
-const emit = defineEmits(["click"]);
-
-// Couleur et épaisseur du glow
-const glowColor = "255,255,255"; // format R,G,B
-const strokeWidth = 5;
-
-let frame;
-
-// --- Met à jour les dimensions du SVG et du rectangle ---
-function updateSize() {
-  if (!wrapper.value || !svg.value || !rect.value) return;
-
-  const b = wrapper.value.querySelector('button').getBoundingClientRect();
-  const radius = b.height / 2;
-
-  svg.value.setAttribute("width", b.width);
-  svg.value.setAttribute("height", b.height);
-
-  rect.value.setAttribute("width", b.width);
-  rect.value.setAttribute("height", b.height);
-  rect.value.setAttribute("rx", radius);
-  rect.value.setAttribute("stroke-width", strokeWidth);
-}
-// --- Animation continue du stroke façon “serpent” ---
-function animateStroke() {
-  const length = rect.value.getTotalLength();
-  const visible = length * 0.3; // longueur visible de la queue
-  const invisible = length - visible;
-
-  rect.value.style.strokeDasharray = `${visible} ${invisible}`;
-  rect.value.style.strokeDashoffset = 0;
-
-  gsap.to(rect.value, {
-    strokeDashoffset: -length,
-    duration: 10,
-    ease: "linear",
-    repeat: -1
-  });
-}
-
-// --- Boucle qui suit la taille du bouton à chaque frame ---
-function resizeLoop() {
-  updateSize();
-  frame = requestAnimationFrame(resizeLoop);
-}
-
-onMounted(async () => {
-  await nextTick();
-  updateSize();
-  animateStroke();
-  resizeLoop();
-});
-
-onUnmounted(() => cancelAnimationFrame(frame));
-
-// Expose updateSize pour pouvoir l'appeler depuis le parent si besoin
-defineExpose({
-  updateSize
-});
-</script>
-
 <template>
-  <div class="btn-animated" ref="wrapper">
-    <button class="btn-inner" :class="$attrs.class" @click="emit('click')">
-      <slot/>
+  <div
+    class="btn-animated"
+    :class="wrapperClass"
+    @click="emit('click')"
+  >
+    <button
+      class="btn-inner"
+      :type="attrs.type ?? 'button'"
+    >
+      <slot />
     </button>
-
-    <svg ref="svg" class="svg-border">
-      <defs>
-        <linearGradient id="border-glow" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" :stop-color="`rgba(${glowColor},0.05)`"/>
-          <stop offset="40%" :stop-color="`rgba(${glowColor},0.7)`"/>
-          <stop offset="60%" :stop-color="`rgba(${glowColor},0.7)`"/>
-          <stop offset="100%" :stop-color="`rgba(${glowColor},0.05)`"/>
-        </linearGradient>
-      </defs>
-      <rect ref="rect" fill="none" stroke="url(#border-glow)" class="glowing-line"/>
-    </svg>
   </div>
 </template>
 
+<script setup>
+import { useAttrs, computed } from 'vue'
+
+defineOptions({ inheritAttrs: false })
+
+const emit  = defineEmits(['click'])
+const attrs = useAttrs()
+
+const wrapperClass = computed(() => attrs.class)
+</script>
+
 <style scoped>
+@property --a {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
 .btn-animated {
   position: relative;
   display: inline-flex;
   border-radius: 999px;
+  /* 1.5px padding = visible border thickness */
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--a),
+    transparent 0%,
+    transparent 58%,
+    rgba(255, 255, 255, 0.85) 73%,
+    rgba(255, 255, 255, 0.85) 80%,
+    transparent 94%
+  );
+  animation: snakeSpin 3s linear infinite;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+              filter 0.35s ease;
   cursor: pointer;
-  transition: transform 0.5s ease;
+}
+
+@keyframes snakeSpin {
+  to { --a: 360deg; }
 }
 
 .btn-animated:hover {
-  transform: scale(1.04);
-
+  transform: scale(1.05);
+  filter: drop-shadow(0 0 12px rgba(137, 126, 255, 0.45));
 }
 
 .btn-inner {
-  width: auto;
-  position: relative;
-  z-index: 1;
+  flex: 1;
   border-radius: 999px;
   box-sizing: border-box;
-  cursor: pointer;
-  font-size: 1rem;
-  padding: 0.8rem 2rem; /* définit la zone cliquable */
+  padding: 0.8rem 2rem;
   background: var(--color-accent);
   color: var(--color-text);
   border: none;
-  transition: background-color 0.5s ease, transform 1s ease;
-  display: inline-flex;       /* ligne flexible, garde le bouton inline */
-  align-items: center;        /* centre l'icône et le texte verticalement */
-  gap: 0.5rem;                /* espace entre texte et svg */
-  white-space: nowrap;        /* empêche le retour à la ligne */
+  cursor: pointer;
+  font-size: 1rem;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  width: 100%;
+  transition: background-color 0.4s ease;
+}
+
+.btn-inner:hover {
+  background: color-mix(in srgb, var(--color-accent) 72%, #000 28%);
 }
 
 .btn-inner svg {
   flex: 0 0 auto;
-  display: block;             /* évite comportement inline par défaut */
-  vertical-align: middle;
-}
-
-.btn-inner:hover {
-  background: var(--color-bg);
-}
-
-.svg-border {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 2;
-  pointer-events: none; /* clic passe au bouton */
-}
-
-.glowing-line {
-  stroke-linecap: round;
-  filter: drop-shadow(0 0 8px rgba(255,255,255,0.5));
+  display: block;
 }
 </style>
