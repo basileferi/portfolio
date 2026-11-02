@@ -8,8 +8,9 @@
       <nav v-if="isZoomed" class="projects-nav">
         <ul>
           <li
-            v-for="project in projectsData"
-            :key="project.title"
+            v-for="(project, i) in projectsData"
+            :key="project.slug || project.title"
+            :style="{ animationDelay: `${0.1 + i * 0.08}s` }"
             @mouseenter="showPreview(project)"
             @mouseleave="clearPreview()"
             @click="navigateToProject(project)"
@@ -17,6 +18,15 @@
           >
             <span class="nav-index">{{ String(projectsData.indexOf(project) + 1).padStart(2, '0') }}</span>
             <span class="nav-title">{{ project.title }}</span>
+            <span class="nav-arrow">→</span>
+          </li>
+          <li
+            class="nav-item nav-item--all"
+            :style="{ animationDelay: `${0.1 + projectsData.length * 0.08}s` }"
+            @click="router.push('/projects')"
+          >
+            <span class="nav-index">↗</span>
+            <span class="nav-title">Tous les projets</span>
             <span class="nav-arrow">→</span>
           </li>
         </ul>
@@ -57,7 +67,7 @@
 
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { gsap } from 'gsap';
 import { SplitText } from 'gsap/SplitText';
@@ -65,7 +75,7 @@ import { ScrambleTextPlugin } from 'gsap/ScrambleTextPlugin';
 
 import initThreeBackground from '../threeBackground.js';
 import createProjectWindow from '../three/projectWindow.js';
-import projectsData from '../data/projects.js';
+import { useProjectsStore } from '@/stores/useProjectsStore';
 import ProjectsGrid from './ProjectsGrid.vue';
 import AnimatedButton from '@/components/AnimatedButton.vue';
 
@@ -74,6 +84,10 @@ gsap.registerPlugin(SplitText, ScrambleTextPlugin);
 const emit   = defineEmits(['hide-header', 'show-header']);
 const router = useRouter();
 const ctaBtn = ref(null);
+
+const projectsStore = useProjectsStore();
+const projectsData = computed(() => projectsStore.projects);
+projectsStore.load();
 
 const isMobile = ref(window.innerWidth <= 768);
 const isZoomed = ref(false);
@@ -404,13 +418,12 @@ canvas#bgCanvas {
   animation: slideInRight 0.4s ease forwards;
 }
 
-.nav-item:nth-child(1) { animation-delay: 0.1s; }
-.nav-item:nth-child(2) { animation-delay: 0.18s; }
-.nav-item:nth-child(3) { animation-delay: 0.26s; }
-.nav-item:nth-child(4) { animation-delay: 0.34s; }
-.nav-item:nth-child(5) { animation-delay: 0.42s; }
-.nav-item:nth-child(6) { animation-delay: 0.50s; }
-.nav-item:nth-child(7) { animation-delay: 0.58s; }
+.nav-item--all {
+  margin-top: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 0 0 6px 6px;
+}
+.nav-item--all .nav-title { color: var(--color-accent); }
 
 @keyframes slideInRight {
   from { opacity: 0; transform: translateX(20px); }

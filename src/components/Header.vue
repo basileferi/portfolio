@@ -1,5 +1,5 @@
 <template>
-  <header class="header" :class="{ hidden: hiddenHeader, 'dark-text': isProjectPage}">
+  <header class="header" :class="{ hidden: hiddenHeader }">
     <RouterLink to="/" class="top-left" @click="closeMenu">
       <div class="title-row">
         <h3 class="portfolio">KOSMO.</h3>
@@ -32,12 +32,14 @@
     </RouterLink>
 
     <div class="top-right" v-if="!isMobile">
+      <RouterLink to="/projects" class="about">PROJETS</RouterLink>
       <RouterLink to="/about" class="about">À PROPOS</RouterLink>
       <animated-button @click="openContact" class="btn-contact">ME CONTACTER</animated-button>
     </div>
 
     <!-- mobile menu (hamburger) -->
     <nav class="menu" v-if="menuOpen && isMobile" @click.self="menuOpen = false">
+      <RouterLink to="/projects" class="menu-link" @click="onMenuLinkClick">PROJETS</RouterLink>
       <RouterLink to="/about" class="menu-link" @click="onMenuLinkClick">À PROPOS</RouterLink>
       <button class="menu-link" @click="openContact">ME CONTACTER</button>
     </nav>
@@ -68,10 +70,6 @@ const props = defineProps({
 
 const menuOpen = ref(false)
 const isMobile = ref(window.innerWidth <= 768)
-
-const isProjectPage = computed(() => {
-  return router.currentRoute.value.name === 'project'
-})
 
 const router = useRouter()
 

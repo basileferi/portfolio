@@ -1,8 +1,8 @@
 <template>
   <div class="projects-grid">
     <div
-        v-for="(project, index) in projects"
-        :key="index"
+        v-for="project in projects"
+        :key="project.slug || project.title"
         class="project-card"
         @click="openLink(project)"
         ref="cards"
@@ -10,16 +10,21 @@
       <img :src="project.preview" :alt="project.title" />
       <h3>{{ project.title }}</h3>
     </div>
+    <RouterLink to="/projects" class="project-card project-card--all">
+      <span>Tous les projets →</span>
+    </RouterLink>
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref, nextTick } from 'vue'
 import { gsap } from 'gsap'
-import projects from '@/data/projects.js'
 import { useRouter } from 'vue-router'
-const router = useRouter()
+import { useProjectsStore } from '@/stores/useProjectsStore'
 
+const router = useRouter()
+const store = useProjectsStore()
+const projects = computed(() => store.projects)
 
 const cards = ref([])
 
@@ -31,8 +36,9 @@ const openLink = (project) => {
   }
 }
 
-
-onMounted(() => {
+onMounted(async () => {
+  await store.load()
+  await nextTick()
   gsap.from(cards.value, {
     y: 50,
     opacity: 0,
@@ -51,6 +57,8 @@ onMounted(() => {
   padding: 2rem;
   width: 100%;
   max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
   margin: 0 auto;
   z-index: 2;
 }
@@ -66,7 +74,8 @@ onMounted(() => {
 
 .project-card img {
   width: 100%;
-  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
   border-radius: 8px;
 }
 
@@ -74,6 +83,14 @@ onMounted(() => {
   margin-top: 0.5rem;
   font-size: 0.9rem;
   color: var(--color-accent);
+}
+
+.project-card--all {
+  display: grid;
+  place-items: center;
+  color: var(--color-text);
+  font-weight: 700;
+  border-color: var(--color-accent);
 }
 
 .project-card:active {

@@ -1,0 +1,39 @@
+DirectoryIndex index.html index.php
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # PHP API and uploaded files are served as-is.
+  RewriteRule ^(api|uploads)/ - [L]
+
+  # /projects is both a Vue route (project index) and a real folder holding
+  # the static mini-sites: send the bare folder URL to the SPA.
+  RewriteRule ^projects/?$ index.html [L]
+
+  # Existing files / folders are served directly…
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # …everything else is a Vue route.
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+  # Vite hashed bundles never change: cache for a year.
+  <If "%{REQUEST_URI} =~ m#^/assets/#">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </If>
+  # The HTML shell must always be revalidated so new deploys show up immediately.
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml
+</IfModule>

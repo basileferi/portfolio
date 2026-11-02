@@ -43,3 +43,10 @@ Le projet utilise :
 
 
 
+
+---
+
+## 🛠️ Back office
+
+Les projets sont gérés depuis un back office caché (PHP + MariaDB, connexion admin).
+Mise en place, secrets GitHub et création du compte : voir [`database/README.md`](database/README.md).

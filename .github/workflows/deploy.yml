@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -23,6 +23,17 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          # Hidden back-office URL (repository variable, optional).
+          VITE_ADMIN_PATH: ${{ vars.ADMIN_PATH }}
+
+      - name: Generate API config (DB credentials)
+        run: node scripts/write-api-config.mjs
+        env:
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
 
       - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@4.3.0
@@ -33,3 +44,9 @@ jobs:
           local-dir: ${{ github.workspace }}/dist/
           server-dir: /
           dry-run: false
+          # Never touch images uploaded from the back office.
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            uploads/projects/**

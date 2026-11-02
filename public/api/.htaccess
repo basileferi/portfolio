@@ -1,0 +1,9 @@
+# Only the public entry points are reachable over HTTP.
+# _bootstrap.php, config.php, *.example.php etc. can only be included from PHP.
+<FilesMatch "^(_.*|config.*|.*\.example\.php|.*\.sql|.*\.md)$">
+  Require all denied
+</FilesMatch>
+
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+</IfModule>
