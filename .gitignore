@@ -41,3 +41,7 @@ coverage
 *.iml
 qodana.yaml
 project-structure.txt
+
+# Back office: DB credentials (generated in CI, local copy for dev)
+/public/api/config.php
+/public/uploads/projects/
