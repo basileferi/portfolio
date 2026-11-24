@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia'
-import staticProjects from '@/data/projects.js'
 import { normalizeProject } from '@/data/normalizeProject.js'
 
 const API_TIMEOUT_MS = 5000
@@ -23,7 +22,7 @@ export const useProjectsStore = defineStore('projects', {
   state: () => ({
     projects: [],
     loaded: false,
-    source: null, // 'api' | 'static'
+    error: null, // set when the API is unreachable (the database is the only source)
     preview: null, // draft opened by the admin with ?preview=1
     bust: 0, // cache-buster after a back-office save
   }),
@@ -33,21 +32,20 @@ export const useProjectsStore = defineStore('projects', {
   },
 
   actions: {
-    /** Loads once; falls back to the static list if the API is unavailable. */
+    /** Loads the published projects once, from the back-office API (database). */
     load() {
       if (this.loaded) return Promise.resolve(this.projects)
       if (pending) return pending
       pending = fetchJson(this.bust ? `/api/projects.php?v=${this.bust}` : '/api/projects.php')
         .then((data) => {
           const list = Array.isArray(data?.projects) ? data.projects : []
-          if (!list.length) throw new Error('Empty project list')
           this.projects = list.map(normalizeProject).filter((p) => p.slug)
-          this.source = 'api'
+          this.error = null
         })
         .catch((err) => {
-          if (import.meta.env.DEV) console.info('[projects] API unavailable, using static data:', err.message)
-          this.projects = staticProjects.map(normalizeProject)
-          this.source = 'static'
+          console.error('[projects] API unavailable:', err.message)
+          this.projects = []
+          this.error = err.message
         })
         .then(() => {
           this.loaded = true

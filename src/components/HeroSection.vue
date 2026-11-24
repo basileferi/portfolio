@@ -15,6 +15,7 @@
             @mouseleave="clearPreview()"
             @click="navigateToProject(project)"
             class="nav-item"
+            data-cursor-label="Voir"
           >
             <span class="nav-index">{{ String(projectsData.indexOf(project) + 1).padStart(2, '0') }}</span>
             <span class="nav-title">{{ project.title }}</span>
@@ -22,6 +23,7 @@
           </li>
           <li
             class="nav-item nav-item--all"
+            role="button"
             :style="{ animationDelay: `${0.1 + projectsData.length * 0.08}s` }"
             @click="router.push('/projects')"
           >

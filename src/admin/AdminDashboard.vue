@@ -38,7 +38,7 @@
         <span v-if="!query" class="dash-handle" aria-hidden="true" title="Glisser pour réordonner">⋮⋮</span>
         <button type="button" class="dash-thumb" :aria-label="`Modifier ${p.title}`" @click="$emit('edit', p)">
           <img v-if="p.preview" :src="p.preview" alt="" loading="lazy" />
-          <span v-else>—</span>
+          <span v-else>-</span>
         </button>
 
         <div class="dash-info">

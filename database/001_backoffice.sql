@@ -1,5 +1,5 @@
 -- =====================================================================
--- Back office migration — run ONCE in phpMyAdmin on `jh6rkj_portfolio`
+-- Back office migration - run ONCE in phpMyAdmin on `jh6rkj_portfolio`
 -- (MariaDB 10.6). Non destructive: existing rows are kept and become
 -- drafts (published = 0) so you can review / delete them from the back office.
 -- Safe to re-run: every statement is idempotent.
@@ -52,21 +52,21 @@ CREATE TABLE IF NOT EXISTS `admin_login_attempts` (
   KEY `idx_attempts_ip_time` (`ip`, `attempted_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 4. Current portfolio projects (same content as src/data/projects.js) --
+-- 4. Current portfolio projects (initial seed) --
 INSERT IGNORE INTO `projects`
   (`title`, `slug`, `subtitle`, `category`, `year`, `context`, `role`, `tech_stack`,
    `image_url`, `media`, `video_url`, `repo_link`, `live_demo_link`,
    `description`, `highlights`, `published`, `sort_order`, `created_at`)
 VALUES
 ('ESOP - G2eLab', 'esop-g2elab', 'Application métier pour la recherche scientifique',
- 'Développement Web', '2025', 'Stage — G2eLab, Grenoble INP', 'Développeur full-stack',
+ 'Développement Web', '2025', 'Stage - G2eLab, Grenoble INP', 'Développeur full-stack',
  'Vue 3, FastAPI (Python), RESTful API, Swagger / OpenAPI',
  '/projects/esop-g2elab/preview.svg', '[]', NULL, NULL, 'https://esop.g2elab.grenoble-inp.fr/',
- '<p>Stage d''immersion professionnelle de huit semaines au <strong>G2eLab</strong> (Laboratoire de Génie Électrique de Grenoble), laboratoire spécialisé dans les microréseaux (<em>smart grids</em>).</p>\n<p>Mission : rendre accessible une bibliothèque de calcul scientifique propriétaire via une interface moderne, en livrant un outil fonctionnel qui simplifie le travail quotidien d''un chercheur.</p>\n<h3>Architecture</h3>\n<ul><li><strong>Backend - FastAPI (Python) :</strong> API RESTful haute performance avec documentation Swagger automatique. Interfacée avec la bibliothèque de calcul interne, les résultats complexes sont traduits en structures JSON exploitables.</li><li><strong>Frontend - Vue 3 (SPA) :</strong> Interface responsive permettant la visualisation dynamique des simulations sous deux formes — graphique (courbes de charge) et scalaire (métriques de performance).</li></ul>\n<h3>Apports</h3>\n<p>Ce stage a confirmé mon envie de continuer vers la création de logiciels appliqués à la science : manipuler des données, collaborer avec un expert du domaine, et livrer un outil robuste de A à Z en autonomie.</p>',
+ '<p>Stage d''immersion professionnelle de huit semaines au <strong>G2eLab</strong> (Laboratoire de Génie Électrique de Grenoble), laboratoire spécialisé dans les microréseaux (<em>smart grids</em>).</p>\n<p>Mission : rendre accessible une bibliothèque de calcul scientifique propriétaire via une interface moderne, en livrant un outil fonctionnel qui simplifie le travail quotidien d''un chercheur.</p>\n<h3>Architecture</h3>\n<ul><li><strong>Backend - FastAPI (Python) :</strong> API RESTful haute performance avec documentation Swagger automatique. Interfacée avec la bibliothèque de calcul interne, les résultats complexes sont traduits en structures JSON exploitables.</li><li><strong>Frontend - Vue 3 (SPA) :</strong> Interface responsive permettant la visualisation dynamique des simulations sous deux formes - graphique (courbes de charge) et scalaire (métriques de performance).</li></ul>\n<h3>Apports</h3>\n<p>Ce stage a confirmé mon envie de continuer vers la création de logiciels appliqués à la science : manipuler des données, collaborer avec un expert du domaine, et livrer un outil robuste de A à Z en autonomie.</p>',
  'Stage de 8 semaines en laboratoire de recherche (smart grids)\nAPI REST FastAPI avec documentation Swagger automatique\nSPA Vue 3 de visualisation des simulations : courbes et métriques\nOutil livré de A à Z en autonomie',
  1, 0, '2025-06-01 00:00:00'),
 
-('Kosmo.', 'kosmo', 'Portfolio 3D interactif — site actuel',
+('Kosmo.', 'kosmo', 'Portfolio 3D interactif - site actuel',
  'Développement Web', '2024', 'Projet personnel', 'Design & développement',
  'Vue 3, Three.js, GSAP, Tailwind CSS, Pinia, Vite, PHP, MariaDB',
  '/projects/kosmo/preview.png', '[]', NULL, NULL, NULL,

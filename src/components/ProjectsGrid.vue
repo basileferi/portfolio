@@ -4,6 +4,7 @@
         v-for="project in projects"
         :key="project.slug || project.title"
         class="project-card"
+        data-cursor-label="Voir"
         @click="openLink(project)"
         ref="cards"
     >

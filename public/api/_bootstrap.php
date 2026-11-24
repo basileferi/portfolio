@@ -5,7 +5,7 @@ declare(strict_types=1);
  * Shared helpers for the portfolio API (public + back office).
  *
  * Files whose name starts with "_" and config.php are blocked from direct
- * HTTP access by api/.htaccess — they are only ever included from PHP.
+ * HTTP access by api/.htaccess - they are only ever included from PHP.
  */
 
 error_reporting(E_ALL);

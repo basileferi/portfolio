@@ -91,7 +91,7 @@ html.has-custom-cursor iframe {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 9500;
+  z-index: 10000;
   pointer-events: none;
   border-radius: 50%;
   will-change: transform;

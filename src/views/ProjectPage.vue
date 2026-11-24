@@ -1,10 +1,9 @@
 <template>
   <div ref="root" class="pp">
-    <CustomCursor />
     <div class="pp-progress" aria-hidden="true"><span ref="progressBar" /></div>
     <Header :show-logo="true" />
 
-    <div v-if="isPreview" class="pp-draft" role="status">Aperçu d'un brouillon — non visible du public</div>
+    <div v-if="isPreview" class="pp-draft" role="status">Aperçu d'un brouillon, non visible du public</div>
 
     <main v-if="project" id="contenu" class="pp-main">
       <!-- ================= HERO ================= -->
@@ -73,7 +72,7 @@
           :aria-label="`Agrandir l'image de couverture de ${project.title}`"
           @click="openLightbox(0)"
         >
-          <img :src="project.image" :alt="`${project.title} — aperçu`" fetchpriority="high" decoding="async" />
+          <img :src="project.image" :alt="`${project.title}, aperçu`" fetchpriority="high" decoding="async" />
         </button>
       </figure>
 
@@ -122,7 +121,7 @@
             <iframe
               v-if="video.kind === 'iframe'"
               :src="video.src"
-              :title="`Vidéo de présentation — ${project.title}`"
+              :title="`Vidéo de présentation : ${project.title}`"
               loading="lazy"
               allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
             />
@@ -150,7 +149,7 @@
             @click="openLightbox(lightboxImages.indexOf(src))"
           >
             <span class="pp-g-zoom">
-              <img :src="src" :alt="`${project.title} — capture ${i + 1}`" loading="lazy" decoding="async" @load="refreshTriggers" />
+              <img :src="src" :alt="`${project.title}, capture ${i + 1}`" loading="lazy" decoding="async" @load="refreshTriggers" />
             </span>
             <span class="pp-g-n" aria-hidden="true">{{ pad(i + 1) }}</span>
           </button>
@@ -237,7 +236,6 @@ import { SplitText } from 'gsap/SplitText'
 
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
-import CustomCursor from '@/components/CustomCursor.vue'
 import SoundToggle from '@/components/SoundToggle.vue'
 import Lightbox from '@/components/Lightbox.vue'
 import cvFile from '@/assets/CV_FERRAND-RICHARTE_Basile.pdf'
@@ -274,7 +272,7 @@ const pad = (n) => String(n).padStart(2, '0')
 const total = computed(() => store.projects.length)
 const nav = computed(() => (project.value && !isPreview.value ? store.neighbours(project.value.slug) : { index: -1, prev: null, next: null }))
 const video = computed(() => videoEmbed(project.value?.video))
-const eyebrow = computed(() => [project.value?.category, project.value?.year].filter(Boolean).join(' — '))
+const eyebrow = computed(() => [project.value?.category, project.value?.year].filter(Boolean).join(' · '))
 const facts = computed(() => {
   const p = project.value
   if (!p) return []
@@ -450,7 +448,7 @@ onMounted(async () => {
     return
   }
   project.value = p
-  document.title = `${p.title} — Basile Ferrand-Richarte`
+  document.title = `${p.title} | Basile Ferrand-Richarte`
   await nextTick()
   // SplitText must measure the real display font, not the fallback.
   await document.fonts?.ready

@@ -8,7 +8,7 @@ import { useProjectsStore } from '@/stores/useProjectsStore'
  * Hidden back-office URL. Override at build time with VITE_ADMIN_PATH
  * (GitHub repository variable ADMIN_PATH). Access is protected by login.
  */
-export const ADMIN_PATH = '/' + String(import.meta.env.VITE_ADMIN_PATH || 'studio-43cc16').replace(/^\/+|\/+$/g, '')
+export const ADMIN_PATH = '/' + String(import.meta.env.VITE_ADMIN_PATH || 'studio').replace(/^\/+|\/+$/g, '')
 
 const routes = [
   {
@@ -87,7 +87,7 @@ router.afterEach((to) => {
   }
 
   if (to.name !== 'project') {
-    document.title = to.meta?.title ? `${to.meta.title} — Kosmo.` : 'BasileFeRi - Kosmo.'
+    document.title = to.meta?.title ? `${to.meta.title} | Kosmo.` : 'BasileFeRi - Kosmo.'
   }
 
   // Small tick so the new route's DOM is rendered before the curtain leaves.

@@ -6,7 +6,7 @@
       class="lb"
       role="dialog"
       aria-modal="true"
-      :aria-label="`${title} — image ${index + 1} sur ${images.length}`"
+      :aria-label="`${title}, image ${index + 1} sur ${images.length}`"
       @keydown="onKey"
       @touchstart.passive="onTouchStart"
       @touchend.passive="onTouchEnd"
@@ -28,7 +28,7 @@
           ref="imgEl"
           :key="images[index]"
           :src="images[index]"
-          :alt="`${title} — image ${index + 1}`"
+          :alt="`${title}, image ${index + 1}`"
           class="lb-img"
           draggable="false"
         />

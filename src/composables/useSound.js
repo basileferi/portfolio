@@ -1,5 +1,5 @@
 /**
- * Kosmo sound design — every sound is synthesised live with the Web Audio API
+ * Kosmo sound design - every sound is synthesised live with the Web Audio API
  * (no audio files to download). Sounds are subtle UI cues: hover ticks, soft
  * clicks, a filtered-noise "whoosh" for page transitions, glassy chimes on
  * reveals and a very quiet ambient pad on project pages.
@@ -243,7 +243,7 @@ export function toggleSound() {
 }
 
 /* ------------------------------------------------------------------ */
-/* Ambient pad — barely audible "room tone" on project pages           */
+/* Ambient pad - barely audible "room tone" on project pages           */
 /* ------------------------------------------------------------------ */
 
 let pad = null

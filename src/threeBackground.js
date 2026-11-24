@@ -200,7 +200,7 @@ export default function initThreeBackground() {
     });
     composer.addPass(scanlinePass);
 
-    // Chromatic Aberration — subtle normally, increases on zoom
+    // Chromatic Aberration - subtle normally, increases on zoom
     const chromaticPass = new ShaderPass({
         uniforms: {
             tDiffuse:  { value: null },

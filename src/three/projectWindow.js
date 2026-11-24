@@ -174,7 +174,7 @@ export default function createProjectWindow(
         loader.load(
             url,
             (texture) => {
-                if (ticket !== loadTicket) { texture.dispose(); return; } // stale — a newer request won
+                if (ticket !== loadTicket) { texture.dispose(); return; } // stale - a newer request won
                 createOrUpdatePreview(texture);
             },
             undefined,

@@ -44,7 +44,7 @@
 
     <!-- ============ 2. Recruteurs ============ -->
     <fieldset class="ed-card">
-      <legend><span>2</span> En bref <small>— ce qu'un recruteur lit en 10 secondes</small></legend>
+      <legend><span>2</span> En bref <small>: ce qu'un recruteur lit en 10 secondes</small></legend>
       <div class="ed-grid">
         <div class="ed-field">
           <label class="adm-label" for="f-role">Mon rôle</label>
@@ -65,7 +65,7 @@
           </ul>
         </div>
         <div class="ed-field ed-span-2">
-          <label class="adm-label" for="f-highlights">Points clés <small>un par ligne — 3 à 5 idéalement</small></label>
+          <label class="adm-label" for="f-highlights">Points clés <small>un par ligne, 3 à 5 idéalement</small></label>
           <textarea id="f-highlights" v-model="form.highlights" class="adm-textarea" rows="4" placeholder="API REST avec documentation Swagger&#10;Temps de chargement réduit de 30 %&#10;Livré en autonomie" />
         </div>
       </div>

@@ -1,13 +1,12 @@
 <template>
   <div ref="root" class="pi">
-    <CustomCursor />
     <Header :show-logo="true" />
 
     <main class="pi-main" id="contenu">
       <!-- ============ HERO ============ -->
       <header class="pi-hero">
         <p class="pi-eyebrow" data-intro>
-          <span class="dot" aria-hidden="true" /> Index des travaux — {{ year }}
+          <span class="dot" aria-hidden="true" /> Index des travaux · {{ year }}
         </p>
         <h1 class="pi-title">
           <span ref="titleEl" class="pi-title-word">Projets</span>
@@ -106,7 +105,8 @@
         </li>
       </ul>
 
-      <p v-if="store.loaded && !filtered.length" class="pi-empty">Aucun projet dans cette catégorie pour l'instant.</p>
+      <p v-if="store.loaded && store.error" class="pi-empty">Les projets sont momentanément indisponibles. Réessayez dans un instant.</p>
+      <p v-else-if="store.loaded && !filtered.length" class="pi-empty">Aucun projet publié pour l'instant.</p>
 
       <!-- Floating preview that follows the cursor on the list view -->
       <div v-if="effectiveView === 'list'" ref="floatEl" class="pi-float" aria-hidden="true">
@@ -133,7 +133,6 @@ import { gsap } from 'gsap'
 import { SplitText } from 'gsap/SplitText'
 import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
-import CustomCursor from '@/components/CustomCursor.vue'
 import SoundToggle from '@/components/SoundToggle.vue'
 import { useProjectsStore } from '@/stores/useProjectsStore'
 import { useSmoothScroll, prefersReducedMotion } from '@/composables/useSmoothScroll'

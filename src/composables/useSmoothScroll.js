@@ -30,16 +30,26 @@ export function disablePageScroll() {
   if (app) app.style.height = '100%'
 }
 
-/** Page scroll + Lenis inertia scrolling synced with GSAP ScrollTrigger. */
-export function useSmoothScroll({ smooth = true } = {}) {
+/**
+ * Page scroll + Lenis inertia scrolling synced with GSAP ScrollTrigger.
+ * `wrapper`: CSS selector of a page that scrolls inside its own element
+ * (About, Legal) instead of the window.
+ */
+export function useSmoothScroll({ smooth = true, wrapper = null } = {}) {
   let tick = null
+  let resizeObserver = null
 
   onMounted(() => {
-    enablePageScroll()
-    window.scrollTo(0, 0)
+    const el = wrapper ? document.querySelector(wrapper) : null
+    if (el) el.scrollTop = 0
+    else {
+      enablePageScroll()
+      window.scrollTo(0, 0)
+    }
     if (!smooth || prefersReducedMotion()) return
 
     lenis = new Lenis({
+      ...(el ? { wrapper: el, content: el } : {}),
       duration: 1.15,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
@@ -49,13 +59,20 @@ export function useSmoothScroll({ smooth = true } = {}) {
     tick = (time) => lenis?.raf(time * 1000)
     gsap.ticker.add(tick)
     gsap.ticker.lagSmoothing(0)
+
+    // An element wrapper does not resize when its content grows (images…): watch the children.
+    if (el && 'ResizeObserver' in window) {
+      resizeObserver = new ResizeObserver(() => lenis?.resize())
+      Array.from(el.children).forEach((child) => resizeObserver.observe(child))
+    }
   })
 
   onBeforeUnmount(() => {
+    resizeObserver?.disconnect()
     if (tick) gsap.ticker.remove(tick)
     lenis?.destroy()
     lenis = null
-    disablePageScroll()
+    if (!wrapper) disablePageScroll()
   })
 
   return {

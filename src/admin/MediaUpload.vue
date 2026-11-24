@@ -37,7 +37,7 @@
       <input type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/avif" :multiple="multiple" class="sr-only" @change="onPick" />
       <span class="mu-drop-ico" aria-hidden="true">⤒</span>
       <span><b>Cliquez</b> ou déposez {{ multiple ? 'des images' : 'une image' }} ici</span>
-      <small>JPG, PNG, WebP, GIF — redimensionnées automatiquement</small>
+      <small>JPG, PNG, WebP, GIF, redimensionnées automatiquement</small>
     </label>
     <button v-else type="button" class="adm-btn adm-btn--sm mu-replace" @click="removeAt(0)">Remplacer l'image</button>
 

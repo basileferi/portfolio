@@ -144,6 +144,9 @@
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 import Breadcrumb from "@/components/Breadcrumb.vue";
+import { useSmoothScroll } from "@/composables/useSmoothScroll";
+
+useSmoothScroll({ wrapper: ".legal-wrapper" });
 
 const MailToCopy = "basileferi.pro@proton.me"; // remplace par ton texte
 

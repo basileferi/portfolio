@@ -8,7 +8,9 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   // `npm run api:dev` serves public/ (and the PHP API) on :8000.
+  // Or read the live projects: VITE_API_PROXY=https://basileferi.fr npm run dev
   const apiTarget = env.VITE_API_PROXY || 'http://localhost:8000'
+  const changeOrigin = !/localhost|127\.0\.0\.1/.test(apiTarget)
 
   return {
     plugins: [
@@ -22,8 +24,8 @@ export default defineConfig(({ mode }) => {
     },
     server: {
       proxy: {
-        '/api': { target: apiTarget, changeOrigin: false },
-        '/uploads': { target: apiTarget, changeOrigin: false },
+        '/api': { target: apiTarget, changeOrigin },
+        '/uploads': { target: apiTarget, changeOrigin },
       },
     },
   }

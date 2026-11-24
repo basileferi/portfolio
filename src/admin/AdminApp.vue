@@ -158,7 +158,7 @@ watch([editParam, () => projects.value.length], () => {
 
 onMounted(async () => {
   enablePageScroll()
-  document.title = 'Studio — Kosmo.'
+  document.title = 'Studio | Kosmo.'
   try {
     const me = await api.me()
     if (me.authenticated) await onLoggedIn(me)

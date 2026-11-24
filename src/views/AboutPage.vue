@@ -127,7 +127,10 @@ import AnimatedButton from "@/components/AnimatedButton.vue";
 
 import { useModalStore } from '@/stores/useModalStore'
 
+import { useSmoothScroll } from '@/composables/useSmoothScroll'
+
 const modal = useModalStore()
+useSmoothScroll({ wrapper: '.about-page' })
 
 gsap.registerPlugin(SplitText, ScrollTrigger, ScrambleTextPlugin)
 
