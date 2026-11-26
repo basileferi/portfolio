@@ -100,7 +100,7 @@ export default {
     location: 'France · Switzerland · International',
     based: 'Based in France, open to opportunities in Switzerland & worldwide.',
     pitch:
-      'Third-year multimedia and web student. I design and ship complete web products, from the first pixel to the last line of server code.',
+      'Third-year Multimedia and Web Development student. I design and deliver complete web products, combining interface design with front-end and back-end development.',
     availability: 'Looking for a 14 to 17-week internship from 22 February 2027.',
     choose: 'Choose a project',
   },

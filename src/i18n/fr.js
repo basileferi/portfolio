@@ -100,7 +100,7 @@ export default {
     location: 'France · Suisse · International',
     based: "Disponible pour des opportunités en France, en Suisse et à l'international.",
     pitch:
-      'Étudiant en 3e année, filière multimédia et web. Je conçois et livre des produits web complets, du premier pixel à la dernière ligne de code serveur.',
+      "Étudiant en 3e année, filière multimédia et développement web. Je conçois et livre des produits web complets, alliant conception d'interfaces, développement front-end et back-end",
     availability: "En recherche d'un stage de 14 à 17 semaines à partir du 22 février 2027.",
     choose: 'Choisissez un projet',
   },
