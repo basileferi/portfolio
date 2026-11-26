@@ -15,6 +15,10 @@ phpMyAdmin → base `jh6rkj_portfolio` → onglet **SQL** → coller le contenu 
 
 Puis [`002_no_em_dash.sql`](002_no_em_dash.sql) une fois (retire les tirets cadratins des textes en base).
 
+Puis [`003_boardtheboat_gamestats_playtest.sql`](003_boardtheboat_gamestats_playtest.sql) : ajoute
+boardtheboat et Gamestats (publiés) et complète Playtest (lien en ligne, description).
+Les images sont dans `public/projects/boardtheboat/` et `public/projects/gamestats/`.
+
 ## 2. Compte admin
 
 ```bash
