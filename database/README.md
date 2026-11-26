@@ -19,6 +19,13 @@ Puis [`003_boardtheboat_gamestats_playtest.sql`](003_boardtheboat_gamestats_play
 boardtheboat et Gamestats (publiés) et complète Playtest (lien en ligne, description).
 Les images sont dans `public/projects/boardtheboat/` et `public/projects/gamestats/`.
 
+Puis [`004_english.sql`](004_english.sql) : version anglaise du site (langue par défaut). Ajoute les colonnes
+`title_en`, `subtitle_en`, `category_en`, `context_en`, `role_en`, `description_en`, `highlights_en`
+et les remplit pour les projets actuels. **À exécuter avant de pousser le code** qui enregistre ces colonnes,
+sinon l'enregistrement d'un projet depuis le back office échoue. Ne réécrit jamais un projet dont la description
+anglaise est déjà remplie. Ensuite, les textes anglais se modifient dans le back office (section « Version anglaise ») ;
+un champ anglais vide reprend le texte français.
+
 ## 2. Compte admin
 
 ```bash

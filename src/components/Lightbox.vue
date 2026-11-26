@@ -6,7 +6,7 @@
       class="lb"
       role="dialog"
       aria-modal="true"
-      :aria-label="`${title}, image ${index + 1} sur ${images.length}`"
+      :aria-label="t('lightbox.dialog', { title, n: index + 1, total: images.length })"
       @keydown="onKey"
       @touchstart.passive="onTouchStart"
       @touchend.passive="onTouchEnd"
@@ -18,7 +18,7 @@
         <p class="lb-count" aria-live="polite">
           <span>{{ pad(index + 1) }}</span> / {{ pad(images.length) }}
         </p>
-        <button ref="closeBtn" type="button" class="lb-close" aria-label="Fermer (Échap)" data-cursor-label="Fermer" @click="close">
+        <button ref="closeBtn" type="button" class="lb-close" :aria-label="t('lightbox.close')" :data-cursor-label="t('lightbox.closeCursor')" @click="close">
           <span aria-hidden="true">✕</span>
         </button>
       </header>
@@ -28,24 +28,24 @@
           ref="imgEl"
           :key="images[index]"
           :src="images[index]"
-          :alt="`${title}, image ${index + 1}`"
+          :alt="t('lightbox.alt', { title, n: index + 1 })"
           class="lb-img"
           draggable="false"
         />
       </div>
 
       <template v-if="images.length > 1">
-        <button type="button" class="lb-nav lb-prev" aria-label="Image précédente (←)" data-cursor-label="Préc." @click="go(-1)">←</button>
-        <button type="button" class="lb-nav lb-next" aria-label="Image suivante (→)" data-cursor-label="Suiv." @click="go(1)">→</button>
+        <button type="button" class="lb-nav lb-prev" :aria-label="t('lightbox.prev')" :data-cursor-label="t('lightbox.prevCursor')" @click="go(-1)">←</button>
+        <button type="button" class="lb-nav lb-next" :aria-label="t('lightbox.next')" :data-cursor-label="t('lightbox.nextCursor')" @click="go(1)">→</button>
 
-        <nav class="lb-thumbs" aria-label="Miniatures">
+        <nav class="lb-thumbs" :aria-label="t('lightbox.thumbs')">
           <button
             v-for="(src, i) in images"
             :key="src + i"
             type="button"
             class="lb-thumb"
             :class="{ active: i === index }"
-            :aria-label="`Afficher l'image ${i + 1}`"
+            :aria-label="t('lightbox.show', { n: i + 1 })"
             :aria-current="i === index"
             @click="goTo(i)"
           >
@@ -61,6 +61,7 @@
 import { ref, watch, nextTick, onBeforeUnmount } from 'vue'
 import { gsap } from 'gsap'
 import { sfx } from '@/composables/useSound'
+import { t } from '@/i18n'
 import { getLenis, prefersReducedMotion } from '@/composables/useSmoothScroll'
 
 const props = defineProps({

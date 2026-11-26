@@ -1,8 +1,9 @@
 <template>
   <Splash-Preloader />
   <router-view v-slot="{ Component, route }">
-    <!-- keyed by path so going from one project to the next replays the page intro -->
-    <component :is="Component" :key="route.path" />
+    <!-- keyed by path so going from one project to the next replays the page intro,
+         and by language so animated (SplitText) headings are rebuilt in the new language -->
+    <component :is="Component" :key="`${route.path}|${locale}`" />
   </router-view>
   <PageCurtain />
   <CustomCursor />
@@ -11,15 +12,18 @@
 </template>
 
 <script setup>
-import { computed, onMounted, onBeforeUnmount } from "vue";
+import { computed, watch, onMounted, onBeforeUnmount } from "vue";
 import { useRoute } from "vue-router";
 import SplashPreloader from "@/components/SplashPreloader.vue";
 import PageCurtain from "@/components/PageCurtain.vue";
 import CustomCursor from "@/components/CustomCursor.vue";
 import SoundToggle from "@/components/SoundToggle.vue";
 import { sfx } from "@/composables/useSound";
+import { locale } from "@/i18n";
+import { applyPageTitle } from "@/router";
 
 const route = useRoute();
+watch(locale, () => applyPageTitle(route));
 // projects pages have their own toolbar toggle and sound design; the admin stays silent
 const ownSound = computed(() => ["projects", "project", "admin"].includes(route.name));
 const showSoundToggle = computed(() => !!route.name && !ownSound.value);

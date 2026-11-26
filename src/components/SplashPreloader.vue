@@ -1,7 +1,7 @@
 <template>
   <div v-show="visible" id="splash-preloader">
     <!-- Logo centré -->
-    <img :src="logo" alt="Logo" class="splash-logo" />
+    <img :src="logo" :alt="t('common.logoAlt')" class="splash-logo" />
     <!-- Barre libre en dessous du logo -->
     <div class="splash-bar-container">
       <div ref="progressBar" class="splash-progress"></div>
@@ -13,6 +13,7 @@
 import { ref, onMounted } from 'vue';
 import gsap from 'gsap';
 import logo from "@/assets/logo/logo_b.png";
+import { t } from '@/i18n';
 const progressBar = ref(null);
 const visible = ref(true);
 

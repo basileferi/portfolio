@@ -1,5 +1,7 @@
 /**
- * One shape for every project, whatever its source (PHP API or static fallback).
+ * One shape for every project (public API or admin preview), in the requested language.
+ * French columns are the reference; `<field>_en` columns hold the English version and
+ * fall back to French when left empty in the back office.
  */
 const toList = (value, separator) => {
   if (Array.isArray(value)) return value.map((v) => String(v).trim()).filter(Boolean)
@@ -22,22 +24,31 @@ export function videoEmbed(url) {
   return { kind: 'video', src: url }
 }
 
-export function normalizeProject(p = {}) {
+const hasValue = (v) => (Array.isArray(v) ? v.length > 0 : typeof v === 'string' && v.trim() !== '')
+
+/** English value when there is one, French otherwise. */
+function localized(p, field, lang) {
+  if (lang === 'en' && hasValue(p[`${field}_en`])) return p[`${field}_en`]
+  return p[field]
+}
+
+export function normalizeProject(p = {}, lang = 'fr') {
   const preview = p.preview || p.image || (Array.isArray(p.media) ? p.media[0] : '') || ''
+  const pick = (field) => localized(p, field, lang)
   return {
     id: p.id ?? null,
-    title: p.title || 'Sans titre',
+    title: pick('title') || (lang === 'en' ? 'Untitled' : 'Sans titre'),
     slug: p.slug || '',
-    subtitle: p.subtitle || '',
-    category: p.category || '',
+    subtitle: pick('subtitle') || '',
+    category: pick('category') || '',
     year: p.year ? String(p.year) : '',
-    context: p.context || '',
-    role: p.role || '',
+    context: pick('context') || '',
+    role: pick('role') || '',
     preview,
     image: p.image || preview,
     media: toList(p.media, ','),
-    description: p.description || '',
-    highlights: toList(p.highlights, /\r?\n/),
+    description: pick('description') || '',
+    highlights: toList(pick('highlights'), /\r?\n/),
     tech_stack: p.tech_stack || '',
     stack: toList(p.tech_stack, ','),
     link: p.link || '',

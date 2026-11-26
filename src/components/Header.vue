@@ -3,14 +3,17 @@
     <RouterLink to="/" class="top-left" @click="closeMenu">
       <div class="title-row">
         <h3 class="portfolio">KOSMO.</h3>
-        <img src="@/assets/logo/logo_b.png" alt="Logo" class="logo" />
+        <img src="@/assets/logo/logo_b.png" :alt="t('common.logoAlt')" class="logo" />
       </div>
-      <h1 class="name">par BASILE FERRAND-RICHARTE</h1>
+      <h1 class="name">{{ t('header.by') }}</h1>
     </RouterLink>
 
     <div
         class="hamburger"
         :class="{ open: menuOpen }"
+        role="button"
+        :aria-label="t('header.menu')"
+        :aria-expanded="menuOpen"
         @click="menuOpen = !menuOpen"
     >
       <div class="line top"></div>
@@ -32,16 +35,18 @@
     </RouterLink>
 
     <div class="top-right" v-if="!isMobile">
-      <RouterLink to="/projects" class="about">PROJETS</RouterLink>
-      <RouterLink to="/about" class="about">À PROPOS</RouterLink>
-      <animated-button @click="openContact" class="btn-contact">ME CONTACTER</animated-button>
+      <RouterLink to="/projects" class="about">{{ t('header.projects') }}</RouterLink>
+      <RouterLink to="/about" class="about">{{ t('header.about') }}</RouterLink>
+      <LanguageToggle />
+      <animated-button @click="openContact" class="btn-contact">{{ t('header.contact') }}</animated-button>
     </div>
 
     <!-- mobile menu (hamburger) -->
     <nav class="menu" v-if="menuOpen && isMobile" @click.self="menuOpen = false">
-      <RouterLink to="/projects" class="menu-link" @click="onMenuLinkClick">PROJETS</RouterLink>
-      <RouterLink to="/about" class="menu-link" @click="onMenuLinkClick">À PROPOS</RouterLink>
-      <button class="menu-link" @click="openContact">ME CONTACTER</button>
+      <RouterLink to="/projects" class="menu-link" @click="onMenuLinkClick">{{ t('header.projects') }}</RouterLink>
+      <RouterLink to="/about" class="menu-link" @click="onMenuLinkClick">{{ t('header.about') }}</RouterLink>
+      <button class="menu-link" @click="openContact">{{ t('header.contact') }}</button>
+      <LanguageToggle class="menu-lang" />
     </nav>
 
     <!-- modal -->
@@ -58,7 +63,9 @@ import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
 import ContactModal from './ContactModal.vue'
 import { useRouter } from 'vue-router'
 import AnimatedButton from "@/components/AnimatedButton.vue";
+import LanguageToggle from "@/components/LanguageToggle.vue";
 import { useModalStore } from '@/stores/useModalStore'
+import { t } from '@/i18n'
 import { gsap } from 'gsap'
 
 const modal = useModalStore()
@@ -262,6 +269,7 @@ function onMenuLinkClick() {
   text-align: left;
 }
 .menu .menu-link:hover { background: var(--color-accent); }
+.menu .menu-lang { align-self: flex-start; }
 
 /* modal overlay */
 .modal-overlay {

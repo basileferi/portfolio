@@ -5,7 +5,8 @@ export default function createProjectWindow(
     scene,
     width  = 4,
     height = 2.5,
-    tilt   = { x: -0.2, y: 0.1 }
+    tilt   = { x: -0.2, y: 0.1 },
+    placeholderText = 'Choose a project'
 ) {
     const group = new THREE.Group();
     group.position.set(0, 0, 0);
@@ -87,7 +88,7 @@ export default function createProjectWindow(
     const maskTexture = createRoundedMaskTexture(width, height, 0.12);
 
     // ---- PLACEHOLDER ----
-    function createPlaceholderTexture(text = 'Choisissez un projet') {
+    function createPlaceholderTexture(text = placeholderText) {
         const c   = document.createElement('canvas');
         c.width   = 1024;
         c.height  = 512;

@@ -238,15 +238,10 @@ function action_save(): void
         }
     }
 
-    $highlights = $in['highlights'] ?? '';
-    $highlights = is_array($highlights) ? implode("\n", array_filter($highlights, 'is_string')) : (string) $highlights;
-    $highlights = implode("\n", array_slice(split_lines($highlights), 0, 12));
-
-    $description = $in['description'] ?? '';
-    $description = sanitize_html(is_string($description) ? $description : '');
-    if (strlen($description) > 60000) {
-        throw new ValidationError('Description trop longue.');
-    }
+    $highlights = clean_highlights($in['highlights'] ?? '');
+    $highlightsEn = clean_highlights($in['highlights_en'] ?? '');
+    $description = clean_description($in['description'] ?? '', 'Description');
+    $descriptionEn = clean_description($in['description_en'] ?? '', 'Description (anglais)');
 
     $data = [
         'title' => $title,
@@ -264,6 +259,13 @@ function action_save(): void
         'live_demo_link' => url_field($in, 'link', 'Lien en ligne'),
         'description' => $description,
         'highlights' => $highlights,
+        'title_en' => str_field($in, 'title_en', 255, false, 'Titre (anglais)'),
+        'subtitle_en' => str_field($in, 'subtitle_en', 255, false, 'Accroche (anglais)'),
+        'category_en' => str_field($in, 'category_en', 255, false, 'Catégorie (anglais)'),
+        'context_en' => str_field($in, 'context_en', 120, false, 'Contexte (anglais)'),
+        'role_en' => str_field($in, 'role_en', 120, false, 'Rôle (anglais)'),
+        'description_en' => $descriptionEn,
+        'highlights_en' => $highlightsEn,
         'published' => !empty($in['published']) ? 1 : 0,
     ];
 
@@ -293,6 +295,22 @@ function action_save(): void
     }
 
     send_json(['project' => project_admin(fetch_project($id))]);
+}
+
+/** Key points: one per line, 12 max. Accepts a string or a list. */
+function clean_highlights(mixed $value): string
+{
+    $value = is_array($value) ? implode("\n", array_filter($value, 'is_string')) : (is_scalar($value) ? (string) $value : '');
+    return implode("\n", array_slice(split_lines($value), 0, 12));
+}
+
+function clean_description(mixed $value, string $label): string
+{
+    $html = sanitize_html(is_string($value) ? $value : '');
+    if (strlen($html) > 60000) {
+        throw new ValidationError("{$label} trop longue.");
+    }
+    return $html;
 }
 
 function action_publish(): void

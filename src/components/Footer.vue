@@ -7,22 +7,22 @@
     <div class="footer-main">
       <!-- Colonne gauche : Logo -->
       <RouterLink to="/" class="footer-logo">
-        <img src="@/assets/logo/logo_b.png" alt="Logo Basile Feri" class="logo-image">
+        <img src="@/assets/logo/logo_b.png" :alt="t('footer.logoAlt')" class="logo-image">
       </RouterLink>
 
       <!-- Colonne centre : Menu -->
-      <nav class="footer-menu" aria-label="Navigation footer">
-        <h3 class="footer-title">Menu</h3>
+      <nav class="footer-menu" :aria-label="t('footer.nav')">
+        <h3 class="footer-title">{{ t('footer.menu') }}</h3>
         <ul class="menu-list">
-          <li><router-link to="/">Accueil</router-link></li>
-          <li><router-link to="/about">À propos</router-link></li>
+          <li><router-link to="/">{{ t('footer.home') }}</router-link></li>
+          <li><router-link to="/about">{{ t('footer.about') }}</router-link></li>
           <li>
-            <button @click="modal.openContact()" class="footer-contact-btn"><strong>Me contacter</strong></button>
+            <button @click="modal.openContact()" class="footer-contact-btn"><strong>{{ t('footer.contact') }}</strong></button>
           </li>
         </ul>
         <!-- Lien CV -->
         <a :href="cvFile" download="CV_FERRAND-RICHARTE_Basile.pdf" class="cv-link">
-          CV
+          {{ t('common.cvShort') }}
         <svg class="icon-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M4 15v2a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-2M12 4v12m0 0l-4-4m4 4l4-4"/>
         </svg>
@@ -30,8 +30,8 @@
       </nav>
 
       <!-- Colonne droite : Socials -->
-      <nav class="footer-socials" aria-label="Réseaux sociaux">
-        <h3 class="footer-title">Réseaux</h3>
+      <nav class="footer-socials" :aria-label="t('footer.socialNav')">
+        <h3 class="footer-title">{{ t('footer.social') }}</h3>
         <div class="socials-list">
           <a
               href="https://linkedin.com/in/basileferi"
@@ -65,7 +65,7 @@
     <div class="footer-bottom">
       <p class="footer-copyright">© {{ currentYear }} Basile Ferrand-Richarte</p>
       <p class="footer-brand">Kosmo.</p>
-      <router-link to="/mentions-legales" class="footer-legal">Mentions légales</router-link>
+      <router-link to="/mentions-legales" class="footer-legal">{{ t('footer.legal') }}</router-link>
     </div>
   </footer>
 </template>
@@ -77,6 +77,7 @@ import cvFile from '@/assets/CV_FERRAND-RICHARTE_Basile.pdf';
 import ContactModal from "@/components/ContactModal.vue";
 const currentYear = computed(() => new Date().getFullYear());
 import { useModalStore } from '@/stores/useModalStore'
+import { t } from '@/i18n'
 
 const modal = useModalStore()
 // Fonction pour ouvrir la modale Contact

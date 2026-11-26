@@ -2,9 +2,9 @@
   <div class="modal-content">
     <div class="modal-header">
       <p class="modal-subtitle">
-        Discutons ensemble, je suis certain de pouvoir être un atout pour votre équipe.
+        {{ t('contact.intro') }}
       </p>
-      <button class="close-btn" @click="$emit('close')" aria-label="Close modal">
+      <button type="button" class="close-btn" @click="$emit('close')" :aria-label="t('contact.close')">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
         </svg>
@@ -18,26 +18,26 @@
     >
       <div class="grid-form">
         <div>
-          <label for="firstName">Prénom</label>
-          <input id="firstName" type="text" name="firstName" placeholder="Prénom" required />
+          <label for="firstName">{{ t('contact.firstName') }}</label>
+          <input id="firstName" type="text" name="firstName" :placeholder="t('contact.firstName')" autocomplete="given-name" required />
         </div>
         <div>
-          <label for="lastName">Nom</label>
-          <input id="lastName" type="text" name="lastName" placeholder="Nom" required />
+          <label for="lastName">{{ t('contact.lastName') }}</label>
+          <input id="lastName" type="text" name="lastName" :placeholder="t('contact.lastName')" autocomplete="family-name" required />
         </div>
         <div>
-          <label for="email">Email</label>
-          <input id="email" type="email" name="email" placeholder="Email" required />
+          <label for="email">{{ t('contact.email') }}</label>
+          <input id="email" type="email" name="email" :placeholder="t('contact.email')" autocomplete="email" required />
         </div>
         <div>
-          <label for="telephone">Téléphone</label>
-          <input id="telephone" type="tel" name="telephone" placeholder="Téléphone" />
+          <label for="telephone">{{ t('contact.phone') }}</label>
+          <input id="telephone" type="tel" name="telephone" :placeholder="t('contact.phone')" autocomplete="tel" />
         </div>
       </div>
 
       <div class="message-field">
-        <label for="message">Message</label>
-        <textarea id="message" name="message" rows="3" placeholder="Votre message..." required></textarea>
+        <label for="message">{{ t('contact.message') }}</label>
+        <textarea id="message" name="message" rows="3" :placeholder="t('contact.messagePlaceholder')" required></textarea>
       </div>
 
       <div class="modal-footer">
@@ -74,11 +74,11 @@
           </a>
 
         </div>
-        <button @click="copyToClipboard" class="btn-inner"><svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><title>Copier mon Mail</title><g id="copy_line" fill='none'><path d='M24 0v24H0V0zM12.593 23.258l-.011.002-.071.035-.02.004-.014-.004-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01-.017.428.005.02.01.013.104.074.015.004.012-.004.104-.074.012-.016.004-.017-.017-.427c-.002-.01-.009-.017-.017-.018m.265-.113-.013.002-.185.093-.01.01-.003.011.018.43.005.012.008.007.201.093c.012.004.023 0 .029-.008l.004-.014-.034-.614c-.003-.012-.01-.02-.02-.022m-.715.002a.023.023 0 0 0-.027.006l-.006.014-.034.614c0 .012.007.02.017.024l.015-.002.201-.093.01-.008.004-.011.017-.43-.003-.012-.01-.01z'/><path fill='#F9F9F9FF' d='M19 2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-2v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h2V4a2 2 0 0 1 2-2zm-4 6H5v12h10zm-5 7a1 1 0 1 1 0 2H8a1 1 0 1 1 0-2zm9-11H9v2h6a2 2 0 0 1 2 2v8h2zm-7 7a1 1 0 0 1 .117 1.993L12 13H8a1 1 0 0 1-.117-1.993L8 11z'/></g></svg>
-          Email</button>
+        <button type="button" @click="copyToClipboard" class="btn-inner" :title="t('common.copyEmail')"><svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><g id="copy_line" fill='none'><path d='M24 0v24H0V0zM12.593 23.258l-.011.002-.071.035-.02.004-.014-.004-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01-.017.428.005.02.01.013.104.074.015.004.012-.004.104-.074.012-.016.004-.017-.017-.427c-.002-.01-.009-.017-.017-.018m.265-.113-.013.002-.185.093-.01.01-.003.011.018.43.005.012.008.007.201.093c.012.004.023 0 .029-.008l.004-.014-.034-.614c-.003-.012-.01-.02-.02-.022m-.715.002a.023.023 0 0 0-.027.006l-.006.014-.034.614c0 .012.007.02.017.024l.015-.002.201-.093.01-.008.004-.011.017-.43-.003-.012-.01-.01z'/><path fill='#F9F9F9FF' d='M19 2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-2v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h2V4a2 2 0 0 1 2-2zm-4 6H5v12h10zm-5 7a1 1 0 1 1 0 2H8a1 1 0 1 1 0-2zm9-11H9v2h6a2 2 0 0 1 2 2v8h2zm-7 7a1 1 0 0 1 .117 1.993L12 13H8a1 1 0 0 1-.117-1.993L8 11z'/></g></svg>
+          {{ t('contact.emailButton') }}</button>
 
 
-        <animated-button type="submit" class="submit-btn modal-animated-btn">Envoyer</animated-button>
+        <animated-button type="submit" class="submit-btn modal-animated-btn">{{ t('contact.send') }}</animated-button>
       </div>
     </form>
   </div>
@@ -87,6 +87,7 @@
 <script setup>
 import AnimatedButton from "@/components/AnimatedButton.vue";
 import { useModalStore } from '@/stores/useModalStore'
+import { t } from '@/i18n'
 const modal = useModalStore()
 
 const MailToCopy = "basileferi.pro@proton.me";
@@ -94,7 +95,7 @@ const MailToCopy = "basileferi.pro@proton.me";
 function copyToClipboard() {
   navigator.clipboard.writeText(MailToCopy)
       .then(() => {
-        alert("Email basileferi.pro@proton.me copié dans le presse-papiers !");
+        alert(t('common.emailCopied', { email: MailToCopy }));
       })
       .catch(console.error);
 }

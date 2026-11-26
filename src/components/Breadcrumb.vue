@@ -1,12 +1,13 @@
 <template>
   <nav class="breadcrumb">
-    <RouterLink to="/" class="crumb">Accueil</RouterLink>
+    <RouterLink to="/" class="crumb">{{ t('breadcrumb.home') }}</RouterLink>
     <span class="separator">›</span>
     <span class="crumb current">{{ current }}</span>
   </nav>
 </template>
 
 <script setup>
+import { t } from '@/i18n'
 const props = defineProps({
   current: { type: String, required: true }
 });

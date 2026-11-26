@@ -6,21 +6,20 @@
       <!-- ============ HERO ============ -->
       <header class="pi-hero">
         <p class="pi-eyebrow" data-intro>
-          <span class="dot" aria-hidden="true" /> Index des travaux · {{ year }}
+          <span class="dot" aria-hidden="true" /> {{ t('projects.eyebrow', { year }) }}
         </p>
         <h1 class="pi-title">
-          <span ref="titleEl" class="pi-title-word">Projets</span>
+          <span ref="titleEl" class="pi-title-word">{{ t('projects.title') }}</span>
           <sup class="pi-count" data-intro>({{ pad(store.projects.length) }})</sup>
         </h1>
         <p class="pi-lead" data-intro>
-          Développement web, expériences 3D et design d'interface.
-          Chaque fiche résume en un coup d'œil <strong>le contexte, mon rôle et la stack</strong>.
+          {{ t('projects.leadA') }}<strong>{{ t('projects.leadStrong') }}</strong>{{ t('projects.leadB') }}
         </p>
       </header>
 
       <!-- ============ TOOLBAR ============ -->
       <div class="pi-toolbar" data-intro>
-        <div class="pi-filters" role="group" aria-label="Filtrer par catégorie">
+        <div class="pi-filters" role="group" :aria-label="t('projects.filterGroup')">
           <button
             v-for="f in filters"
             :key="f.value"
@@ -36,9 +35,9 @@
         </div>
 
         <div class="pi-tools">
-          <div v-if="!isMobile" class="pi-view" role="group" aria-label="Affichage">
-            <button type="button" :class="{ active: view === 'list' }" :aria-pressed="view === 'list'" @click="setView('list', $event)">Liste</button>
-            <button type="button" :class="{ active: view === 'grid' }" :aria-pressed="view === 'grid'" @click="setView('grid', $event)">Grille</button>
+          <div v-if="!isMobile" class="pi-view" role="group" :aria-label="t('projects.viewGroup')">
+            <button type="button" :class="{ active: view === 'list' }" :aria-pressed="view === 'list'" @click="setView('list', $event)">{{ t('projects.list') }}</button>
+            <button type="button" :class="{ active: view === 'grid' }" :aria-pressed="view === 'grid'" @click="setView('grid', $event)">{{ t('projects.grid') }}</button>
           </div>
           <SoundToggle />
         </div>
@@ -52,13 +51,13 @@
         @mouseleave="hidePreview"
       >
         <li class="pi-list-head" aria-hidden="true">
-          <span>N°</span><span>Projet</span><span>Catégorie</span><span>Stack</span><span>Année</span>
+          <span>{{ t('projects.headNo') }}</span><span>{{ t('projects.headProject') }}</span><span>{{ t('projects.headCategory') }}</span><span>{{ t('projects.headStack') }}</span><span>{{ t('projects.headYear') }}</span>
         </li>
         <li v-for="p in filtered" :key="p.slug" class="pi-row" data-row>
           <RouterLink
             :to="{ name: 'project', params: { slug: p.slug } }"
             class="pi-row-link"
-            data-cursor-label="Voir"
+            :data-cursor-label="t('projects.view')"
             @mouseenter="showPreview(p, $event)"
             @focus="showPreview(p)"
             @blur="hidePreview"
@@ -83,12 +82,12 @@
           <RouterLink
             :to="{ name: 'project', params: { slug: p.slug } }"
             class="pi-card-link"
-            data-cursor-label="Voir"
+            :data-cursor-label="t('projects.view')"
             @mouseenter="sfx.hover($event)"
             @click="sfx.click($event)"
           >
             <div class="pi-card-media">
-              <img v-if="p.preview" :src="p.preview" :alt="`Aperçu du projet ${p.title}`" loading="lazy" decoding="async" />
+              <img v-if="p.preview" :src="p.preview" :alt="t('projects.cardAlt', { title: p.title })" loading="lazy" decoding="async" />
               <span class="pi-card-index">{{ pad(indexOf(p) + 1) }}</span>
             </div>
             <div class="pi-card-body">
@@ -97,7 +96,7 @@
               <p class="pi-card-meta">
                 <span>{{ p.category }}</span><span v-if="p.year">{{ p.year }}</span>
               </p>
-              <ul class="pi-card-stack" aria-label="Technologies">
+              <ul class="pi-card-stack" :aria-label="t('projects.stack')">
                 <li v-for="t in p.stack.slice(0, 4)" :key="t">{{ t }}</li>
               </ul>
             </div>
@@ -105,8 +104,8 @@
         </li>
       </ul>
 
-      <p v-if="store.loaded && store.error" class="pi-empty">Les projets sont momentanément indisponibles. Réessayez dans un instant.</p>
-      <p v-else-if="store.loaded && !filtered.length" class="pi-empty">Aucun projet publié pour l'instant.</p>
+      <p v-if="store.loaded && store.error" class="pi-empty">{{ t('projects.unavailable') }}</p>
+      <p v-else-if="store.loaded && !filtered.length" class="pi-empty">{{ t('projects.empty') }}</p>
 
       <!-- Floating preview that follows the cursor on the list view -->
       <div v-if="effectiveView === 'list'" ref="floatEl" class="pi-float" aria-hidden="true">
@@ -138,6 +137,7 @@ import { useProjectsStore } from '@/stores/useProjectsStore'
 import { useSmoothScroll, prefersReducedMotion } from '@/composables/useSmoothScroll'
 import { introDelay } from '@/composables/usePageTransition'
 import { sfx, ambient } from '@/composables/useSound'
+import { t } from '@/i18n'
 
 gsap.registerPlugin(SplitText)
 
@@ -162,7 +162,7 @@ const indexOf = (p) => store.projects.indexOf(p)
 const effectiveView = computed(() => (isMobile.value ? 'grid' : view.value))
 
 const filters = computed(() => [
-  { value: 'all', label: 'Tous', count: store.projects.length },
+  { value: 'all', label: t('projects.all'), count: store.projects.length },
   ...store.categories.map((c) => ({ value: c, label: c, count: store.projects.filter((p) => p.category === c).length })),
 ])
 const filtered = computed(() => (filter.value === 'all' ? store.projects : store.projects.filter((p) => p.category === filter.value)))

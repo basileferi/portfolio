@@ -3,18 +3,18 @@
     <div class="pp-progress" aria-hidden="true"><span ref="progressBar" /></div>
     <Header :show-logo="true" />
 
-    <div v-if="isPreview" class="pp-draft" role="status">Aperçu d'un brouillon, non visible du public</div>
+    <div v-if="isPreview" class="pp-draft" role="status">{{ t('project.draft') }}</div>
 
     <main v-if="project" id="contenu" class="pp-main">
       <!-- ================= HERO ================= -->
       <header class="pp-hero">
         <div class="pp-hero-top" data-hero>
           <RouterLink to="/projects" class="pp-crumb" @mouseenter="sfx.hover($event)" @click="sfx.click($event)">
-            <span aria-hidden="true">←</span> Tous les projets
+            <span aria-hidden="true">←</span> {{ t('project.allProjects') }}
           </RouterLink>
           <span class="pp-hero-meta">
-            <span class="pp-kbd" aria-hidden="true"><kbd>←</kbd><kbd>→</kbd> naviguer · <kbd>Échap</kbd> index</span>
-            <span v-if="nav.index > -1" class="pp-counter" aria-label="Position du projet">
+            <span class="pp-kbd" aria-hidden="true"><kbd>←</kbd><kbd>→</kbd> {{ t('project.kbdNavigate') }} · <kbd>{{ t('project.kbdEsc') }}</kbd> {{ t('project.kbdIndex') }}</span>
+            <span v-if="nav.index > -1" class="pp-counter" :aria-label="t('project.position')">
               {{ pad(nav.index + 1) }}<span> / {{ pad(total) }}</span>
             </span>
           </span>
@@ -39,11 +39,11 @@
             target="_blank"
             rel="noopener noreferrer"
             class="pp-btn pp-btn--primary"
-            data-cursor-label="Ouvrir"
+            :data-cursor-label="t('project.openCursor')"
             @mouseenter="sfx.hover($event)"
             @click="sfx.click($event)"
           >
-            Voir le projet en ligne <span aria-hidden="true">↗</span>
+            {{ t('project.live') }} <span aria-hidden="true">↗</span>
           </a>
           <a
             v-if="project.repo"
@@ -51,14 +51,14 @@
             target="_blank"
             rel="noopener noreferrer"
             class="pp-btn"
-            data-cursor-label="Code"
+            :data-cursor-label="t('project.codeCursor')"
             @mouseenter="sfx.hover($event)"
             @click="sfx.click($event)"
           >
-            Code source <span aria-hidden="true">↗</span>
+            {{ t('project.source') }} <span aria-hidden="true">↗</span>
           </a>
           <button type="button" class="pp-btn pp-btn--ghost" @mouseenter="sfx.hover($event)" @click="scrollTo(firstSectionId)">
-            Détails <span aria-hidden="true">↓</span>
+            {{ t('project.details') }} <span aria-hidden="true">↓</span>
           </button>
         </div>
       </header>
@@ -68,29 +68,29 @@
         <button
           type="button"
           class="pp-cover-inner"
-          data-cursor-label="Agrandir"
-          :aria-label="`Agrandir l'image de couverture de ${project.title}`"
+          :data-cursor-label="t('project.enlarge')"
+          :aria-label="t('project.enlargeCover', { title: project.title })"
           @click="openLightbox(0)"
         >
-          <img :src="project.image" :alt="`${project.title}, aperçu`" fetchpriority="high" decoding="async" />
+          <img :src="project.image" :alt="t('project.coverAlt', { title: project.title })" fetchpriority="high" decoding="async" />
         </button>
       </figure>
 
       <!-- ================= POINTS CLÉS ================= -->
       <section v-if="hasDetails" id="details" class="pp-section pp-overview" aria-labelledby="t-details">
         <div class="pp-label-col">
-          <h2 id="t-details" class="pp-label" data-reveal><span>{{ sectionNo('details') }}</span> Points clés</h2>
+          <h2 id="t-details" class="pp-label" data-reveal><span>{{ sectionNo('details') }}</span> {{ t('project.keyPoints') }}</h2>
         </div>
         <div class="pp-content-col">
           <div v-if="project.stack.length" class="pp-stack" data-reveal>
-            <h3 class="pp-mini-title">Technologies</h3>
+            <h3 class="pp-mini-title">{{ t('project.stack') }}</h3>
             <ul class="pp-chips">
               <li v-for="t in project.stack" :key="t" @mouseenter="sfx.hover($event)">{{ t }}</li>
             </ul>
           </div>
 
           <div v-if="project.highlights.length" class="pp-highlights">
-            <h3 class="pp-mini-title" data-reveal>À retenir</h3>
+            <h3 class="pp-mini-title" data-reveal>{{ t('project.highlights') }}</h3>
             <ol>
               <li v-for="(h, i) in project.highlights" :key="i" class="pp-hl">
                 <span class="pp-hl-n">{{ pad(i + 1) }}</span>
@@ -104,7 +104,7 @@
       <!-- ================= STORY ================= -->
       <section v-if="project.description" id="story" class="pp-section pp-story" aria-labelledby="t-projet">
         <div class="pp-label-col">
-          <h2 id="t-projet" class="pp-label pp-label--sticky" data-reveal><span>{{ sectionNo('story') }}</span> Le projet</h2>
+          <h2 id="t-projet" class="pp-label pp-label--sticky" data-reveal><span>{{ sectionNo('story') }}</span> {{ t('project.story') }}</h2>
         </div>
         <div class="pp-content-col">
           <div ref="proseEl" class="pp-prose" v-html="project.description" />
@@ -114,14 +114,14 @@
       <!-- ================= VIDEO ================= -->
       <section v-if="video" id="video" class="pp-section pp-video" aria-labelledby="t-video">
         <div class="pp-label-col">
-          <h2 id="t-video" class="pp-label" data-reveal><span>{{ sectionNo('video') }}</span> Démo vidéo</h2>
+          <h2 id="t-video" class="pp-label" data-reveal><span>{{ sectionNo('video') }}</span> {{ t('project.video') }}</h2>
         </div>
         <div class="pp-content-col">
           <div class="pp-video-frame" data-reveal>
             <iframe
               v-if="video.kind === 'iframe'"
               :src="video.src"
-              :title="`Vidéo de présentation : ${project.title}`"
+              :title="t('project.videoTitle', { title: project.title })"
               loading="lazy"
               allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
             />
@@ -133,8 +133,8 @@
       <!-- ================= GALLERY ================= -->
       <section v-if="project.media.length" id="gallery" class="pp-section pp-gallery" aria-labelledby="t-galerie">
         <div class="pp-gallery-head">
-          <h2 id="t-galerie" class="pp-label" data-reveal><span>{{ sectionNo('gallery') }}</span> Galerie</h2>
-          <p class="pp-gallery-count" data-reveal>{{ project.media.length }} image{{ project.media.length > 1 ? 's' : '' }} · cliquez pour agrandir</p>
+          <h2 id="t-galerie" class="pp-label" data-reveal><span>{{ sectionNo('gallery') }}</span> {{ t('project.gallery') }}</h2>
+          <p class="pp-gallery-count" data-reveal>{{ t('project.galleryCount', { n: project.media.length }) }}</p>
         </div>
         <div class="pp-gallery-grid">
           <button
@@ -143,13 +143,13 @@
             type="button"
             class="pp-g"
             :class="galleryClass(i)"
-            data-cursor-label="Agrandir"
-            :aria-label="`Agrandir l'image ${i + 1} sur ${project.media.length}`"
+            :data-cursor-label="t('project.enlarge')"
+            :aria-label="t('project.enlargeImage', { i: i + 1, n: project.media.length })"
             @mouseenter="sfx.hover($event)"
             @click="openLightbox(lightboxImages.indexOf(src))"
           >
             <span class="pp-g-zoom">
-              <img :src="src" :alt="`${project.title}, capture ${i + 1}`" loading="lazy" decoding="async" @load="refreshTriggers" />
+              <img :src="src" :alt="t('project.shotAlt', { title: project.title, i: i + 1 })" loading="lazy" decoding="async" @load="refreshTriggers" />
             </span>
             <span class="pp-g-n" aria-hidden="true">{{ pad(i + 1) }}</span>
           </button>
@@ -157,15 +157,15 @@
       </section>
 
       <!-- ================= NEXT PROJECT ================= -->
-      <section v-if="nav.next" class="pp-next" aria-label="Projet suivant">
+      <section v-if="nav.next" class="pp-next" :aria-label="t('project.next')">
         <RouterLink
           :to="{ name: 'project', params: { slug: nav.next.slug } }"
           class="pp-next-link"
-          data-cursor-label="Suivant"
+          :data-cursor-label="t('project.nextCursor')"
           @mouseenter="sfx.hover($event)"
           @click="sfx.click($event)"
         >
-          <span class="pp-next-kicker">Projet suivant <span aria-hidden="true">→</span></span>
+          <span class="pp-next-kicker">{{ t('project.next') }} <span aria-hidden="true">→</span></span>
           <span class="pp-next-title">{{ nav.next.title }}</span>
           <span v-if="nav.next.subtitle" class="pp-next-sub">{{ nav.next.subtitle }}</span>
           <span v-if="nav.next.preview" class="pp-next-media" aria-hidden="true">
@@ -176,36 +176,36 @@
           <RouterLink v-if="nav.prev" :to="{ name: 'project', params: { slug: nav.prev.slug } }" @mouseenter="sfx.hover($event)">
             ← {{ nav.prev.title }}
           </RouterLink>
-          <RouterLink to="/projects" @mouseenter="sfx.hover($event)">Voir tous les projets</RouterLink>
+          <RouterLink to="/projects" @mouseenter="sfx.hover($event)">{{ t('project.viewAll') }}</RouterLink>
         </div>
       </section>
 
       <!-- ================= CTA ================= -->
       <section class="pp-cta" aria-labelledby="t-cta">
-        <p class="pp-cta-kicker" data-reveal>Vous recrutez ?</p>
-        <h2 id="t-cta" class="pp-cta-title" data-reveal>Parlons de votre équipe.</h2>
+        <p class="pp-cta-kicker" data-reveal>{{ t('project.ctaKicker') }}</p>
+        <h2 id="t-cta" class="pp-cta-title" data-reveal>{{ t('project.ctaTitle') }}</h2>
         <div class="pp-cta-actions" data-reveal>
-          <button type="button" class="pp-btn pp-btn--primary" @mouseenter="sfx.hover($event)" @click="openContact">Me contacter</button>
+          <button type="button" class="pp-btn pp-btn--primary" @mouseenter="sfx.hover($event)" @click="openContact">{{ t('common.contactMe') }}</button>
           <a :href="cvFile" download="CV_FERRAND-RICHARTE_Basile.pdf" class="pp-btn" @mouseenter="sfx.hover($event)" @click="sfx.click($event)">
-            Télécharger mon CV <span aria-hidden="true">↓</span>
+            {{ t('common.cv') }} <span aria-hidden="true">↓</span>
           </a>
-          <RouterLink to="/about" class="pp-btn pp-btn--ghost" @mouseenter="sfx.hover($event)">À propos</RouterLink>
+          <RouterLink to="/about" class="pp-btn pp-btn--ghost" @mouseenter="sfx.hover($event)">{{ t('project.about') }}</RouterLink>
         </div>
       </section>
     </main>
 
     <!-- ================= DOCK (always reachable navigation) ================= -->
-    <nav v-if="project" ref="dockEl" class="pp-dock" aria-label="Navigation entre les projets">
-      <RouterLink to="/projects" class="pp-dock-btn pp-dock-index" title="Tous les projets (Échap)" @mouseenter="sfx.hover($event)">
+    <nav v-if="project" ref="dockEl" class="pp-dock" :aria-label="t('project.dock')">
+      <RouterLink to="/projects" class="pp-dock-btn pp-dock-index" :title="t('project.dockIndex')" @mouseenter="sfx.hover($event)">
         <span class="grid-ico" aria-hidden="true"><i /><i /><i /><i /></span>
-        <span class="lbl">Index</span>
+        <span class="lbl">{{ t('project.dockIndexLabel') }}</span>
       </RouterLink>
       <span class="pp-dock-sep" aria-hidden="true" />
       <RouterLink
         v-if="nav.prev"
         :to="{ name: 'project', params: { slug: nav.prev.slug } }"
         class="pp-dock-btn"
-        :aria-label="`Projet précédent : ${nav.prev.title} (flèche gauche)`"
+        :aria-label="t('project.prevAria', { title: nav.prev.title })"
         :title="`← ${nav.prev.title}`"
         @mouseenter="sfx.hover($event)"
       >←</RouterLink>
@@ -214,7 +214,7 @@
         v-if="nav.next"
         :to="{ name: 'project', params: { slug: nav.next.slug } }"
         class="pp-dock-btn"
-        :aria-label="`Projet suivant : ${nav.next.title} (flèche droite)`"
+        :aria-label="t('project.nextAria', { title: nav.next.title })"
         :title="`${nav.next.title} →`"
         @mouseenter="sfx.hover($event)"
       >→</RouterLink>
@@ -246,6 +246,7 @@ import { videoEmbed } from '@/data/normalizeProject'
 import { useSmoothScroll, prefersReducedMotion } from '@/composables/useSmoothScroll'
 import { introDelay } from '@/composables/usePageTransition'
 import { sfx, ambient } from '@/composables/useSound'
+import { t } from '@/i18n'
 
 gsap.registerPlugin(ScrollTrigger, SplitText)
 
@@ -277,10 +278,10 @@ const facts = computed(() => {
   const p = project.value
   if (!p) return []
   return [
-    { label: 'Rôle', value: p.role },
-    { label: 'Contexte', value: p.context },
-    { label: 'Année', value: p.year },
-    { label: 'Stack', value: p.stack.slice(0, 4).join(', ') + (p.stack.length > 4 ? '…' : '') },
+    { label: t('project.facts.role'), value: p.role },
+    { label: t('project.facts.context'), value: p.context },
+    { label: t('project.facts.year'), value: p.year },
+    { label: t('project.facts.stack'), value: p.stack.slice(0, 4).join(', ') + (p.stack.length > 4 ? '…' : '') },
   ].filter((f) => f.value)
 })
 /** Gallery order is kept so "image 3" in the grid is "03" in the lightbox. */

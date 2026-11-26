@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { normalizeProject } from '@/data/normalizeProject.js'
+import { locale } from '@/i18n'
 
 const API_TIMEOUT_MS = 5000
 
@@ -20,15 +21,20 @@ let pending = null
 
 export const useProjectsStore = defineStore('projects', {
   state: () => ({
-    projects: [],
+    raw: [], // projects as sent by the API (French + `_en` columns)
     loaded: false,
     error: null, // set when the API is unreachable (the database is the only source)
-    preview: null, // draft opened by the admin with ?preview=1
+    rawPreview: null, // draft opened by the admin with ?preview=1
     bust: 0, // cache-buster after a back-office save
   }),
 
   getters: {
-    categories: (state) => [...new Set(state.projects.map((p) => p.category).filter(Boolean))],
+    /** Published projects in the current language (recomputed when the language changes). */
+    projects: (state) => state.raw.map((p) => normalizeProject(p, locale.value)).filter((p) => p.slug),
+    preview: (state) => (state.rawPreview ? normalizeProject(state.rawPreview, locale.value) : null),
+    categories() {
+      return [...new Set(this.projects.map((p) => p.category).filter(Boolean))]
+    },
   },
 
   actions: {
@@ -39,12 +45,12 @@ export const useProjectsStore = defineStore('projects', {
       pending = fetchJson(this.bust ? `/api/projects.php?v=${this.bust}` : '/api/projects.php')
         .then((data) => {
           const list = Array.isArray(data?.projects) ? data.projects : []
-          this.projects = list.map(normalizeProject).filter((p) => p.slug)
+          this.raw = list.filter((p) => p && p.slug)
           this.error = null
         })
         .catch((err) => {
           console.error('[projects] API unavailable:', err.message)
-          this.projects = []
+          this.raw = []
           this.error = err.message
         })
         .then(() => {
@@ -64,10 +70,9 @@ export const useProjectsStore = defineStore('projects', {
     async loadPreview(slug) {
       try {
         const data = await fetchJson('/api/admin.php?action=projects')
-        const raw = (data?.projects || []).find((p) => p.slug === slug)
-        this.preview = raw ? normalizeProject(raw) : null
+        this.rawPreview = (data?.projects || []).find((p) => p.slug === slug) || null
       } catch {
-        this.preview = null
+        this.rawPreview = null
       }
       return this.preview
     },
@@ -86,8 +91,8 @@ export const useProjectsStore = defineStore('projects', {
     /** Called by the back office after a save so the public pages are fresh. */
     invalidate() {
       this.loaded = false
-      this.projects = []
-      this.preview = null
+      this.raw = []
+      this.rawPreview = null
       this.bust = Date.now()
     },
   },

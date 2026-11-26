@@ -3,7 +3,7 @@
     <Header :show-logo="true" />
 
     <section class="breadcrumb">
-      <Breadcrumb current="À propos" />
+      <Breadcrumb :current="t('about.breadcrumb')" />
     </section>
 
     <main class="content">
@@ -12,13 +12,14 @@
         <div class="hero-container">
           <div class="hero-text">
             <h1 class="hero-title split-text">
-              Votre futur<span class="accent-text"> développeur</span>
+              {{ t('about.titleA') }}<span class="accent-text">{{ t('about.titleB') }}</span>
             </h1>
             <p class="hero-subtitle split-text">
-              Je suis Basile, futur développeur Front-End passionné par les expériences numériques immersives.
+              {{ t('about.subtitle') }}
             </p>
+            <p class="hero-availability"><span class="avail-dot" aria-hidden="true"></span>{{ t('about.availability') }}</p>
             <animated-button @click="downloadCV" >
-              Télécharger mon CV
+              {{ t('common.cv') }}
               <svg class="icon-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M4 15v2a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-2M12 4v12m0 0l-4-4m4 4l4-4"/>
               </svg>
@@ -54,7 +55,7 @@
                 :to="item.link"
                 class="dynamic-link"
             >
-              → Mes projets ←
+              {{ t('about.myProjects') }}
             </RouterLink>
             </div>
           </div>
@@ -71,7 +72,7 @@
 
       <!-- Section Compétences -->
       <section class="skills-section">
-        <h2 class="section-title-center split-text">Mes compétences techniques</h2>
+        <h2 class="section-title-center split-text">{{ t('about.skillsTitle') }}</h2>
         <div class="skills-grid">
           <div v-for="(skill, index) in skillsData" :key="index" class="skill-card">
             <div class="skill-icon">{{ skill.icon }}</div>
@@ -84,23 +85,23 @@
 
       <!-- Partie Kosmo en bas -->
       <section class="kosmo-section">
-        <h2 class="kosmo-title scramble-text">K___?</h2>
+        <h2 class="kosmo-title scramble-text">{{ t('about.kosmoMask') }}</h2>
         <p class="kosmo-explanation split-text">
-          Qu'est ce que Kosmo ? Il s'agit d'un pseudonyme que j'utilise parfois sur internet. J'ai choisi de le nommer ainsi car Kosmo est une partie mon identité sur le Web, tout comme ce portfolio. Ce projet est mon tout premier site utilisant les bibliothèques GSAP et Three.js, j'ai adoré apprendre les bases de ces bibliothèques JavaScript tout au long de son développement.
+          {{ t('about.kosmoText') }}
         </p>
-        <p class="kosmo-accent">→ Mon portfolio de futur développeur web</p>
+        <p class="kosmo-accent">{{ t('about.kosmoAccent') }}</p>
       </section>
 
       <!-- CTA Final -->
       <section class="cta-final">
-        <h3 class="cta-title split-text">Prêt à discuter ?</h3>
-        <p class="cta-subtitle"><button @click="modal.openContact()" class="cta-contact-btn"><strong>Contactez-moi </strong></button> ou explorez mon portfolio complet pour découvrir mes derniers projets</p>
+        <h3 class="cta-title split-text">{{ t('about.ctaTitle') }}</h3>
+        <p class="cta-subtitle"><button @click="modal.openContact()" class="cta-contact-btn"><strong>{{ t('about.ctaLink') }}</strong></button>{{ t('about.ctaText') }}</p>
         <animated-button @click="modal.openContact()" >
-          ME CONTACTER
+          {{ t('about.ctaButton') }}
         </animated-button>
         <RouterLink to="/" class="retour-proj">
           <div class="retour-row">
-            <h4 class="projects">Projets</h4>
+            <h4 class="projects">{{ t('about.projects') }}</h4>
           </div>
         </RouterLink>
       </section>
@@ -128,6 +129,7 @@ import AnimatedButton from "@/components/AnimatedButton.vue";
 import { useModalStore } from '@/stores/useModalStore'
 
 import { useSmoothScroll } from '@/composables/useSmoothScroll'
+import { t, tm } from '@/i18n'
 
 const modal = useModalStore()
 useSmoothScroll({ wrapper: '.about-page' })
@@ -142,77 +144,27 @@ function downloadCV() {
   link.click()
 }
 
-// Contenu des sections dynamiques alternées
-const dynamicContent = [
-  {
-    title: "Bonjour, je m'appelle Basile",
-    text: "Je suis étudiant en 2e année de BUT MMI avec une spécialisation en Développement Web. En parallèle de mes études, je me forme continuellement à de nouveaux langages, frameworks et technologies pour créer des expériences web captivantes, performantes et immersives.",
-    accent: "Développeur créatif",
-    emoji: "📖",
-    label: "Apprentissage"
-  },
-  {
-    title: "Mes projets en MMI",
-    text: "Dans mes projets de groupe à l’IUT, j’ai souvent été la personne qui fait le lien entre le design et la technique. J’aime imaginer une interface, puis lui donner vie dans le navigateur. Même si ces projets n’étaient pas tous orientés web, ils m’ont permis d’apprendre à travailler efficacement en équipe, à défendre des choix UX/UI, et à traduire des idées en solutions concrètes.",
-    accent: "La Technologie au service du design",
-    emoji: "🧑‍💻👨‍💻👩‍💻",
-    label: "Travail d'équipe",
-    link: "/"
-  },
-  {
-    title: "Impact et résultats",
-    text: "Je développe des interfaces accessibles, structurées et responsives. Mon but est simple : rendre l’expérience agréable pour l’utilisateur. J’accorde autant d’importance à la qualité du code qu’à l’esthétique du résultat.",
-    accent: "Qualité",
-    emoji: "✨",
-    label: "Impact"
-  },
-  {
-    title: "Ce que je veux construire demain",
-    text: "Je veux continuer à progresser en développement web, tout particulièrement en front-end, explorer de nouveaux frameworks et créer des sites plus rapides, plus immersifs, plus utiles. J’apprends un peu chaque jour, dans mes projets d'études comme dans mes projets personnels.",
-    accent: "Gagner de l'expérience",
-    emoji: "🌄",
-    label: "Devenir développeur confirmé"
-  }
+// Alternating rows: copy comes from the i18n dictionaries, visuals stay here.
+// The page is remounted when the language changes, so plain constants are enough.
+const ROW_VISUALS = [
+  { emoji: "📖" },
+  { emoji: "🧑‍💻👨‍💻👩‍💻", link: "/" },
+  { emoji: "✨" },
+  { emoji: "🌄" },
 ]
+const dynamicContent = tm('about.sections').map((copy, i) => ({ ...copy, ...ROW_VISUALS[i] }))
 
-// Données des compétences techniques
-const skillsData = [
-  {
-    icon: "💻",
-    label: "Front-End",
-    items: "JavaScript, Vue.js (Composition API, Pinia), GSAP, Three, CSS, Tailwind, Bootstrap"
-  },
-  {
-    icon: "👁️",
-    label: "UI/UX Design",
-    items: "User Flow, Maquettes Figma animées,prototypage UI/UX, Design d'expérience"
-  },
-  {
-    icon: "⚙️",
-    label: "Back-end",
-    items: "PHP, Node.js"
-  },
-  {
-    icon: "🗃️",
-    label: "Base de données",
-    items: "SQL, MariaDB (SQL, gestion de bases)"
-  },
-  {
-    icon: "⚡",
-    label: "Déploiement",
-    items: "Amazon Web Services, Infomaniak, OVH, CI/CD, Git, Github Actions"
-  },
-  {
-    icon: "⌨️",
-    label: "SEO",
-    items: "HTML, Sémantique, HaloScan"
-  },
-  {
-    icon: "📦",
-    label: "Autres",
-    items: "Bash, Wordpress, Figma, Adobe Creative Suite, Canva, Blender"
-  }
-]
+// Technical skills
+const SKILL_ICONS = {
+  frontend: "💻",
+  design: "👁️",
+  backend: "⚙️",
+  database: "🗃️",
+  deploy: "⚡",
+  seo: "⌨️",
+  other: "📦",
+}
+const skillsData = Object.entries(SKILL_ICONS).map(([key, icon]) => ({ icon, ...tm(`about.skills.${key}`) }))
 
 // Animations GSAP au montage du composant
 onMounted(async () => {
@@ -246,7 +198,7 @@ onMounted(async () => {
     onComplete() { heroSubSplit.revert() },
   })
 
-  gsap.from(['.hero-text .btn-animated', '.hero-visual'], {
+  gsap.from(['.hero-availability', '.hero-text .btn-animated', '.hero-visual'], {
     y: 20,
     opacity: 0,
     duration: 0.8,
@@ -324,9 +276,9 @@ onMounted(async () => {
   // ---- Kosmo scramble ----
   const kosmo = document.querySelector('.scramble-text')
   if (kosmo) {
-    kosmo.textContent = 'K____ ?'
+    kosmo.textContent = t('about.kosmoMask')
     gsap.to(kosmo, {
-      duration: 2.2, scrambleText: 'Kosmo ?', ease: 'power2.inOut',
+      duration: 2.2, scrambleText: t('about.kosmoTitle'), ease: 'power2.inOut',
       scrollTrigger: { trigger: kosmo, start: 'top 88%', scroller },
     })
   }
@@ -402,6 +354,34 @@ onMounted(async () => {
   font-size: 1.125rem;
   line-height: 1.8;
   color: var(--color-subtitle);
+}
+
+.hero-availability {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  align-self: flex-start;
+  padding: 0.55rem 1rem;
+  border: 1px solid rgba(137, 126, 255, 0.4);
+  border-radius: 999px;
+  background: rgba(139, 92, 246, 0.08);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--color-text);
+}
+
+.avail-dot {
+  flex: 0 0 auto;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--color-accent);
+  animation: availPing 2.4s ease-out infinite;
+}
+
+@keyframes availPing {
+  0% { box-shadow: 0 0 0 0 rgba(137, 126, 255, 0.55); }
+  70%, 100% { box-shadow: 0 0 0 9px rgba(137, 126, 255, 0); }
 }
 
 .hero-visual {
@@ -823,7 +803,8 @@ onMounted(async () => {
 
 /* ---- Reduced motion ---- */
 @media (prefers-reduced-motion: reduce) {
-  .hero-graphic::after { animation: none; }
+  .hero-graphic::after,
+  .avail-dot { animation: none; }
   .skill-card, .section-graphic, .graphic-emoji { transition: opacity 0.2s ease; }
 }
 </style>

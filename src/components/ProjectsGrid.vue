@@ -4,7 +4,7 @@
         v-for="project in projects"
         :key="project.slug || project.title"
         class="project-card"
-        data-cursor-label="Voir"
+        :data-cursor-label="t('grid.view')"
         @click="openLink(project)"
         ref="cards"
     >
@@ -12,7 +12,7 @@
       <h3>{{ project.title }}</h3>
     </div>
     <RouterLink to="/projects" class="project-card project-card--all">
-      <span>Tous les projets →</span>
+      <span>{{ t('grid.all') }}</span>
     </RouterLink>
   </div>
 </template>
@@ -22,6 +22,7 @@ import { computed, onMounted, ref, nextTick } from 'vue'
 import { gsap } from 'gsap'
 import { useRouter } from 'vue-router'
 import { useProjectsStore } from '@/stores/useProjectsStore'
+import { t } from '@/i18n'
 
 const router = useRouter()
 const store = useProjectsStore()

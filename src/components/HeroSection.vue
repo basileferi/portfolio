@@ -15,7 +15,7 @@
             @mouseleave="clearPreview()"
             @click="navigateToProject(project)"
             class="nav-item"
-            data-cursor-label="Voir"
+            :data-cursor-label="t('hero.view')"
           >
             <span class="nav-index">{{ String(projectsData.indexOf(project) + 1).padStart(2, '0') }}</span>
             <span class="nav-title">{{ project.title }}</span>
@@ -28,7 +28,7 @@
             @click="router.push('/projects')"
           >
             <span class="nav-index">↗</span>
-            <span class="nav-title">Tous les projets</span>
+            <span class="nav-title">{{ t('hero.allProjects') }}</span>
             <span class="nav-arrow">→</span>
           </li>
         </ul>
@@ -36,30 +36,27 @@
 
       <!-- Hero content (center) -->
       <div class="content">
-        <h1 class="headline">Bienvenue</h1>
-        <h2 class="subtitle">DANS MON ESPACE</h2>
+        <h1 class="headline">{{ t('hero.headline') }}</h1>
+        <p class="subtitle">{{ t('hero.tagline') }}</p>
         <AnimatedButton ref="ctaBtn" class="cta" @click="handleClick">
-          Mes projets
+          {{ t('hero.cta') }}
         </AnimatedButton>
       </div>
 
       <!-- Bottom corners -->
       <div class="bottom-container">
         <RouterLink to="/about" class="bottom-left">
-          <p class="display">Développeur Web</p>
-          <p class="location">Grenoble, France</p>
+          <p class="display">{{ t('hero.location') }}</p>
+          <p class="location">{{ t('hero.based') }}</p>
         </RouterLink>
         <RouterLink to="/about" class="bottom-right">
-          <p class="quick-desc">
-            Étudiant apprenti Développeur Front-end,<br>
-            je me forme continuellement en réalisant des projets web divers.<br>
-            Toujours curieux d'apprendre de nouvelles technologies.
-          </p>
+          <p class="quick-desc">{{ t('hero.pitch') }}</p>
+          <p class="quick-avail"><span class="avail-dot" aria-hidden="true"></span>{{ t('hero.availability') }}</p>
         </RouterLink>
       </div>
 
       <!-- Back button (visible when zoomed) -->
-      <button v-if="isZoomed" class="btn back-btn" @click="handleBack">← Retour</button>
+      <button v-if="isZoomed" class="btn back-btn" @click="handleBack">{{ t('hero.back') }}</button>
 
       <!-- Mobile project grid -->
       <ProjectsGrid v-if="isZoomed && isMobile" />
@@ -80,6 +77,7 @@ import createProjectWindow from '../three/projectWindow.js';
 import { useProjectsStore } from '@/stores/useProjectsStore';
 import ProjectsGrid from './ProjectsGrid.vue';
 import AnimatedButton from '@/components/AnimatedButton.vue';
+import { t } from '@/i18n';
 
 gsap.registerPlugin(SplitText, ScrambleTextPlugin);
 
@@ -133,7 +131,7 @@ const toggleProjects = () => {
 
     if (!isMobile.value) {
       if (!projectWindow) {
-        projectWindow = createProjectWindow(three.scene, 3.5, 2.5, { x: -0.2, y: 0.1 });
+        projectWindow = createProjectWindow(three.scene, 3.5, 2.5, { x: -0.2, y: 0.1 }, t('hero.choose'));
       }
       projectWindow.open();
     }
@@ -228,6 +226,10 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener('openProject', onOpenProjectEvent);
+  // Free the WebGL context: the hero is remounted on every visit and on language change.
+  three?.dispose();
+  three = null;
+  projectWindow = null;
 });
 </script>
 
@@ -299,11 +301,11 @@ canvas#bgCanvas {
 }
 
 .subtitle {
-  font-size: 1.5rem;
+  font-size: 1.35rem;
   font-weight: 400;
-  margin-top: 0.5rem;
+  margin-top: 0.75rem;
   color: var(--color-subtitle);
-  letter-spacing: 0.25rem;
+  letter-spacing: 0.12em;
 }
 
 .cta {
@@ -337,7 +339,7 @@ canvas#bgCanvas {
 
 .bottom-right {
   text-align: end;
-  max-width: 40%;
+  max-width: min(40%, 34rem);
 }
 
 .hero.zoomed .bottom-left,
@@ -347,9 +349,27 @@ canvas#bgCanvas {
   transform: scale(0.9);
 }
 
-.display  { font-size: 2.1rem; }
-.location { color: var(--color-subtitle); font-size: 0.85rem; margin-top: 0.2rem; }
+.display  { font-size: clamp(1.15rem, 1.7vw, 1.75rem); line-height: 1.2; }
+.location { color: var(--color-subtitle); font-size: 0.85rem; line-height: 1.5; margin-top: 0.35rem; }
 .quick-desc { font-size: 0.85rem; line-height: 1.6; color: var(--color-subtitle); }
+.quick-avail { font-size: 0.85rem; line-height: 1.6; margin-top: 0.5rem; color: var(--color-text); }
+.avail-dot {
+  display: inline-block;
+  width: 0.45rem;
+  height: 0.45rem;
+  margin-right: 0.5rem;
+  border-radius: 50%;
+  vertical-align: 0.08em;
+  background: var(--color-accent);
+  animation: availPing 2.4s ease-out infinite;
+}
+@keyframes availPing {
+  0% { box-shadow: 0 0 0 0 rgba(137, 126, 255, 0.55); }
+  70%, 100% { box-shadow: 0 0 0 8px rgba(137, 126, 255, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .avail-dot { animation: none; }
+}
 
 /* ---- Back button ---- */
 .btn {
@@ -485,7 +505,10 @@ canvas#bgCanvas {
   }
   .bottom-left  { font-size: 0.7rem; max-width: 100%; }
   .bottom-right { font-size: 0.7rem; max-width: 100%; text-align: left; }
-  .quick-desc   { font-size: 0.65rem; line-height: 1rem; }
+  .display      { font-size: 1.05rem; }
+  .location     { font-size: 0.7rem; }
+  .quick-desc,
+  .quick-avail  { font-size: 0.65rem; line-height: 1rem; }
   .hero.zoomed .content { display: none; }
   .projects-nav { display: none; }
   .back-btn { top: 1rem; left: 1rem; font-size: 0.75rem; }

@@ -368,6 +368,14 @@ function project_public(array $r): array
         'link' => (string) ($r['live_demo_link'] ?? ''),
         'repo' => (string) ($r['repo_link'] ?? ''),
         'video' => (string) ($r['video_url'] ?? ''),
+        // English version (empty = the front falls back to French). Columns from 004_english.sql.
+        'title_en' => (string) ($r['title_en'] ?? ''),
+        'subtitle_en' => (string) ($r['subtitle_en'] ?? ''),
+        'category_en' => (string) ($r['category_en'] ?? ''),
+        'context_en' => (string) ($r['context_en'] ?? ''),
+        'role_en' => (string) ($r['role_en'] ?? ''),
+        'description_en' => (string) ($r['description_en'] ?? ''),
+        'highlights_en' => split_lines($r['highlights_en'] ?? null),
     ];
 }
 

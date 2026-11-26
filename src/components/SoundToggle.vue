@@ -4,19 +4,20 @@
     class="sound-toggle"
     :class="{ on: soundEnabled }"
     :aria-pressed="soundEnabled"
-    :aria-label="soundEnabled ? 'Couper le son' : 'Activer le son'"
-    :title="soundEnabled ? 'Son activé' : 'Son coupé'"
+    :aria-label="soundEnabled ? t('sound.mute') : t('sound.unmute')"
+    :title="soundEnabled ? t('sound.on') : t('sound.off')"
     @click="toggleSound"
   >
     <span class="bars" aria-hidden="true">
       <i v-for="n in 4" :key="n" :style="{ animationDelay: `${n * -0.17}s` }" />
     </span>
-    <span v-if="showLabel" class="txt">{{ soundEnabled ? 'Son' : 'Muet' }}</span>
+    <span v-if="showLabel" class="txt">{{ soundEnabled ? t('sound.labelOn') : t('sound.labelOff') }}</span>
   </button>
 </template>
 
 <script setup>
 import { soundEnabled, toggleSound } from '@/composables/useSound'
+import { t } from '@/i18n'
 
 defineProps({ showLabel: { type: Boolean, default: true } })
 </script>

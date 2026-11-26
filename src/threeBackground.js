@@ -123,20 +123,22 @@ export default function initThreeBackground() {
 
     // ---- PARALLAX ----
     const mouse = new THREE.Vector2(0, 0);
-    window.addEventListener('mousemove', (e) => {
+    const onMouseMove = (e) => {
         mouse.x = (e.clientX / window.innerWidth - 0.5) * 2;
         mouse.y = -(e.clientY / window.innerHeight - 0.5) * 2;
-    });
+    };
+    window.addEventListener('mousemove', onMouseMove);
 
     const baseCameraPos = new THREE.Vector3(0, 0, 6);
 
-    gsap.ticker.add(() => {
+    const onTick = () => {
         const isZoomedIn = camera.position.z < 4;
         const strength = isZoomedIn ? 0.08 : 0.45;
         camera.position.x += (baseCameraPos.x + mouse.x * strength - camera.position.x) * 0.05;
         camera.position.y += (baseCameraPos.y + mouse.y * strength - camera.position.y) * 0.05;
         camera.lookAt(scene.position);
-    });
+    };
+    gsap.ticker.add(onTick);
 
     // Cinematic startup pullback: camera glides from z=5.5 → z=6
     gsap.to(camera.position, { z: 6, duration: 2.8, ease: 'power1.out', delay: 1 });
@@ -254,8 +256,9 @@ export default function initThreeBackground() {
     // ---- ANIMATION LOOP ----
     const clock = new THREE.Clock();
 
+    let frameId = 0;
     function animate() {
-        requestAnimationFrame(animate);
+        frameId = requestAnimationFrame(animate);
         const t = clock.getElapsedTime();
 
         // -- Main particle drift (organic multi-frequency oscillation)
@@ -310,7 +313,26 @@ export default function initThreeBackground() {
     };
     window.addEventListener('resize', onResize);
 
+    /** Stops the render loop and frees the WebGL context (called when the hero unmounts). */
+    function dispose() {
+        cancelAnimationFrame(frameId);
+        gsap.ticker.remove(onTick);
+        gsap.killTweensOf(camera.position);
+        window.removeEventListener('mousemove', onMouseMove);
+        window.removeEventListener('resize', onResize);
+        scene.traverse((obj) => {
+            obj.geometry?.dispose?.();
+            const mats = Array.isArray(obj.material) ? obj.material : obj.material ? [obj.material] : [];
+            mats.forEach((m) => { m.map?.dispose?.(); m.alphaMap?.dispose?.(); m.dispose?.(); });
+        });
+        particleTex.dispose();
+        composer.dispose?.();
+        renderer.dispose();
+        renderer.forceContextLoss();
+    }
+
     return {
+        dispose,
         camera, scene, renderer, composer,
         particles: mainParticles,
         grainPass, scanlinePass, vignettePass, chromaticPass,

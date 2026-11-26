@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomePage from '@/views/HomePage.vue'
 import { enterCurtain, leaveCurtain } from '@/composables/usePageTransition'
 import { useProjectsStore } from '@/stores/useProjectsStore'
+import { t } from '@/i18n'
 
 /**
  * Hidden back-office URL. Override at build time with VITE_ADMIN_PATH
@@ -20,7 +21,7 @@ const routes = [
     path: '/projects',
     name: 'projects',
     component: () => import('@/views/ProjectsIndex.vue'),
-    meta: { title: 'Projets' },
+    meta: { titleKey: 'routes.projects' },
   },
   {
     path: '/projects/:slug',
@@ -32,13 +33,13 @@ const routes = [
     path: '/about',
     name: 'About',
     component: () => import('../views/AboutPage.vue'),
-    meta: { title: 'À propos' },
+    meta: { titleKey: 'routes.about' },
   },
   {
     path: '/mentions-legales',
     name: 'legal',
     component: () => import('@/views/Legal.vue'),
-    meta: { title: 'Mentions légales' },
+    meta: { titleKey: 'routes.legal' },
   },
   {
     path: ADMIN_PATH,
@@ -57,12 +58,21 @@ const router = createRouter({
   routes,
 })
 
+const routeTitle = (to) => (to.meta?.titleKey ? t(to.meta.titleKey) : to.meta?.title || '')
+
 function curtainLabelFor(to) {
   if (to.name === 'project') {
-    return useProjectsStore().bySlug(String(to.params.slug))?.title || 'Projet'
+    return useProjectsStore().bySlug(String(to.params.slug))?.title || t('routes.project')
   }
   if (to.name === 'home') return 'KOSMO'
-  return to.meta?.title || 'KOSMO'
+  return routeTitle(to) || 'KOSMO'
+}
+
+/** Tab title of every page except project pages (they set their own). Re-run when the language changes. */
+export function applyPageTitle(to) {
+  if (to.name === 'project') return
+  const title = routeTitle(to)
+  document.title = title ? `${title} | Kosmo.` : t('meta.title')
 }
 
 // Curtain transition: cover on leave, reveal on arrive.
@@ -86,9 +96,7 @@ router.afterEach((to) => {
     robots.remove()
   }
 
-  if (to.name !== 'project') {
-    document.title = to.meta?.title ? `${to.meta.title} | Kosmo.` : 'BasileFeRi - Kosmo.'
-  }
+  applyPageTitle(to)
 
   // Small tick so the new route's DOM is rendered before the curtain leaves.
   setTimeout(leaveCurtain, 80)

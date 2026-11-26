@@ -85,8 +85,8 @@
           <button type="button" title="Intertitre" @click="wrapBlock('h3')">H</button>
           <button type="button" title="Gras" @click="wrapInline('strong')"><b>B</b></button>
           <button type="button" title="Italique" @click="wrapInline('em')"><i>I</i></button>
-          <button type="button" title="Liste à puces" @click="makeList">• Liste</button>
-          <button type="button" title="Lien" @click="makeLink">Lien</button>
+          <button type="button" title="Liste à puces" @click="makeList()">• Liste</button>
+          <button type="button" title="Lien" @click="makeLink()">Lien</button>
         </div>
         <textarea
           id="f-description"
@@ -136,9 +136,67 @@
       </div>
     </fieldset>
 
-    <!-- ============ 6. Publication ============ -->
+    <!-- ============ 6. English ============ -->
+    <fieldset class="ed-card">
+      <legend><span>6</span> Version anglaise <small>: affichée aux visiteurs en anglais (langue par défaut du site)</small></legend>
+      <p class="adm-help ed-en-help">
+        Un champ laissé vide reprend le texte français. Les technologies, images et liens sont communs aux deux langues.
+      </p>
+      <div class="ed-grid">
+        <div class="ed-field ed-span-2">
+          <label class="adm-label" for="f-title-en">Titre <small>seulement s'il change en anglais</small></label>
+          <input id="f-title-en" v-model="form.title_en" class="adm-input" maxlength="255" :placeholder="form.title || 'Kosmo.'" lang="en" />
+        </div>
+        <div class="ed-field ed-span-2">
+          <label class="adm-label" for="f-subtitle-en">Accroche</label>
+          <input id="f-subtitle-en" v-model="form.subtitle_en" class="adm-input" maxlength="255" placeholder="E.g. Video game rating website" lang="en" />
+        </div>
+        <div class="ed-field">
+          <label class="adm-label" for="f-category-en">Catégorie</label>
+          <input id="f-category-en" v-model="form.category_en" class="adm-input" list="ed-categories-en" maxlength="255" placeholder="Web Development" lang="en" />
+          <datalist id="ed-categories-en"><option v-for="c in categoryOptionsEn" :key="c" :value="c" /></datalist>
+        </div>
+        <div class="ed-field">
+          <label class="adm-label" for="f-role-en">Mon rôle</label>
+          <input id="f-role-en" v-model="form.role_en" class="adm-input" maxlength="120" placeholder="Full-stack developer" lang="en" />
+        </div>
+        <div class="ed-field ed-span-2">
+          <label class="adm-label" for="f-context-en">Contexte</label>
+          <input id="f-context-en" v-model="form.context_en" class="adm-input" maxlength="120" list="ed-contexts-en" placeholder="Student project, Internship, Freelance…" lang="en" />
+          <datalist id="ed-contexts-en">
+            <option value="Personal project" /><option value="Student project" /><option value="Internship" /><option value="Work-study" /><option value="Freelance" />
+          </datalist>
+        </div>
+        <div class="ed-field ed-span-2">
+          <label class="adm-label" for="f-highlights-en">Points clés <small>un par ligne, dans le même ordre qu'en français</small></label>
+          <textarea id="f-highlights-en" v-model="form.highlights_en" class="adm-textarea" rows="4" placeholder="REST API with Swagger documentation&#10;Scene load time cut by 30%&#10;Delivered independently" lang="en" />
+        </div>
+        <div class="ed-field ed-span-2">
+          <p class="adm-label">Description</p>
+          <div class="ed-toolbar" role="toolbar" aria-label="Mise en forme (anglais)">
+            <button type="button" title="Paragraphe" @click="wrapBlock('p', 'description_en')">¶</button>
+            <button type="button" title="Intertitre" @click="wrapBlock('h3', 'description_en')">H</button>
+            <button type="button" title="Gras" @click="wrapInline('strong', 'description_en')"><b>B</b></button>
+            <button type="button" title="Italique" @click="wrapInline('em', 'description_en')"><i>I</i></button>
+            <button type="button" title="Liste à puces" @click="makeList('description_en')">• Liste</button>
+            <button type="button" title="Lien" @click="makeLink('description_en')">Lien</button>
+          </div>
+          <textarea
+            id="f-description-en"
+            ref="descEnEl"
+            v-model="form.description_en"
+            class="adm-textarea ed-desc"
+            rows="10"
+            lang="en"
+            placeholder="Describe the project: goal, approach, challenges, outcome…"
+          />
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- ============ 7. Publication ============ -->
     <fieldset class="ed-card ed-publish">
-      <legend><span>6</span> Publication</legend>
+      <legend><span>7</span> Publication</legend>
       <label class="ed-switch">
         <input v-model="form.published" type="checkbox" />
         <span class="ed-switch-ui" aria-hidden="true" />
@@ -196,6 +254,13 @@ function toForm(p) {
     link: p?.link ?? '',
     repo: p?.repo ?? '',
     published: p ? !!p.published : false,
+    title_en: p?.title_en ?? '',
+    subtitle_en: p?.subtitle_en ?? '',
+    category_en: p?.category_en ?? '',
+    context_en: p?.context_en ?? '',
+    role_en: p?.role_en ?? '',
+    highlights_en: Array.isArray(p?.highlights_en) ? p.highlights_en.join('\n') : (p?.highlights_en ?? ''),
+    description_en: p?.description_en ?? '',
   }
 }
 
@@ -208,9 +273,11 @@ const uploading = ref(false)
 const error = ref('')
 const descTab = ref('write')
 const descEl = ref(null)
+const descEnEl = ref(null)
 const slugTouched = ref(!!props.project?.slug)
 
 const categoryOptions = computed(() => [...new Set(['Développement Web', 'Design', 'Graphisme', '3D', ...props.categories])])
+const categoryOptionsEn = ['Web Development', 'Motion Design', 'Design', 'Graphic Design', '3D']
 const stackPreview = computed(() => form.tech_stack.split(',').map((s) => s.trim()).filter(Boolean))
 const previewUrl = computed(() => `/projects/${encodeURIComponent(props.project?.slug || form.slug)}${props.project?.published ? '' : '?preview=1'}`)
 
@@ -242,28 +309,29 @@ const descriptionPreview = computed(() => {
   return d.split(/\n\s*\n/).map((p) => `<p>${escapeHtml(p.trim()).replace(/\n/g, '<br>')}</p>`).join('')
 })
 
-function replaceSelection(transform) {
-  const el = descEl.value
+/** Formatting helpers work on the French description by default, or on `description_en`. */
+function replaceSelection(transform, field = 'description') {
+  const el = field === 'description_en' ? descEnEl.value : descEl.value
   const { selectionStart: start, selectionEnd: end, value } = el
   const selected = value.slice(start, end)
   const out = transform(selected)
-  form.description = value.slice(0, start) + out + value.slice(end)
+  form[field] = value.slice(0, start) + out + value.slice(end)
   requestAnimationFrame(() => {
     el.focus()
     el.setSelectionRange(start, start + out.length)
   })
 }
-const wrapInline = (tag) => replaceSelection((s) => `<${tag}>${s || 'texte'}</${tag}>`)
-const wrapBlock = (tag) => replaceSelection((s) => `<${tag}>${s || (tag === 'h3' ? 'Intertitre' : 'Paragraphe')}</${tag}>`)
-const makeList = () => replaceSelection((s) => {
+const wrapInline = (tag, field) => replaceSelection((s) => `<${tag}>${s || 'texte'}</${tag}>`, field)
+const wrapBlock = (tag, field) => replaceSelection((s) => `<${tag}>${s || (tag === 'h3' ? 'Intertitre' : 'Paragraphe')}</${tag}>`, field)
+const makeList = (field) => replaceSelection((s) => {
   const lines = (s || 'Élément 1\nÉlément 2').split('\n').map((l) => l.replace(/^[-*•]\s*/, '').trim()).filter(Boolean)
   return `<ul>\n${lines.map((l) => `  <li>${l}</li>`).join('\n')}\n</ul>`
-})
-function makeLink() {
+}, field)
+function makeLink(field) {
   const url = window.prompt('Adresse du lien (https://…)', 'https://')
   if (!url || url === 'https://') return
   if (!/^(https?:\/\/|\/|mailto:)/i.test(url)) { toast('Lien invalide.', 'error'); return }
-  replaceSelection((s) => `<a href="${url.replace(/"/g, '&quot;')}">${s || url}</a>`)
+  replaceSelection((s) => `<a href="${url.replace(/"/g, '&quot;')}">${s || url}</a>`, field)
 }
 
 /* ---------- save / close ---------- */
@@ -409,4 +477,5 @@ onBeforeUnmount(() => {
   .ed-grid { grid-template-columns: 1fr; }
   .ed-bar-state { width: 100%; }
 }
+.ed-en-help { margin: 0 0 1rem; }
 </style>
